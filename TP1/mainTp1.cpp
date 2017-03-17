@@ -75,8 +75,18 @@ Mat norm_0_255(InputArray _src) {
 //=======================================================================================
 double eqm(const Mat & img1, const Mat & img2)
 {
+	// #TODO assert same img size
 
- return 0;
+	double result = 0;
+	for(int i = 0; i < img1.rows; i++) {
+		for(int j = 0; j < img1.cols; j++) {
+			double pixel1 = (double) img1.at<unsigned char>(i, j);
+			double pixel2 = (double) img2.at<unsigned char>(i, j);
+			result += ( pixel1 - pixel2) * (pixel1 - pixel2);
+
+		}
+	}
+ return result/(img1.rows * img1.cols);
 }
 
 //=======================================================================================
@@ -84,16 +94,31 @@ double eqm(const Mat & img1, const Mat & img2)
 //=======================================================================================
 double psnr(const Mat & imgSrc, const Mat & imgDeg)
 {
-
- return 0;
+	// d c'est la dynamique = ensemble des valeurs possibles par pixel
+	int d = 255;
+	return 10 * log10((d * d) / eqm(imgSrc, imgDeg));
 }
 
 //=======================================================================================
 // distortionMap
 //=======================================================================================
-void distortionMap(const vector<Mat> & imgSrc, const vector<Mat> & imgDeg, Mat &distoMap)
+void distortionMap(const vector<Mat> & imgSrc, const vector<Mat> & imgDeg, Mat & distoMap)
 {
+	std::vector<Mat> distoMapSplit;
+	Mat result;
+	for(int i = 0; i < 3; i++) {
+		result = ((imgSrc[i] - imgDeg[i]) + 155) / 2;
+		distoMapSplit.push_back(result);
+	}
+	imshow("coucou", distoMapSplit[0]);
+	std::cout << distoMapSplit[0] << '\n';
+	merge(distoMapSplit, distoMap);
 
+}
+
+void BGRtoYCrCb(const Mat & imgSrc, Mat & imgOut)
+{
+	cvtColor(imgSrc, imgOut, CV_BGR2YCrCb);
 }
 
 //=======================================================================================
@@ -107,19 +132,55 @@ int main(int argc, char** argv){
     return -1;
   }
 
-  Mat inputImageSrc;
+  Mat inputImageSrc1;
 
   // Ouvrir l'image d'entr�e et v�rifier que l'ouverture du fichier se d�roule normalement
-  inputImageSrc = imread(argv[1], CV_LOAD_IMAGE_COLOR);
-  if(!inputImageSrc.data ) { // Check for invalid input
-        std::cout <<  "Could not open or find the image " << argv[1] << std::endl ;
+  inputImageSrc1 = imread(argv[1], CV_LOAD_IMAGE_COLOR);
+
+  if(!inputImageSrc1.data ) { // Check for invalid input
+    std::cout <<  "Could not open or find the image " << argv[1] << std::endl ;
 		waitKey(0); // Wait for a keystroke in the window
-        return -1;
+    return -1;
   }
 
+	Mat inputImageSrc2;
+	inputImageSrc2 = imread(argv[2], CV_LOAD_IMAGE_COLOR);
+
+  if(!inputImageSrc2.data ) { // Check for invalid input
+    std::cout <<  "Could not open or find the image " << argv[2] << std::endl ;
+		waitKey(0); // Wait for a keystroke in the window
+    return -1;
+  }
+
+
+	Mat imageYCrCb1;
+	BGRtoYCrCb(inputImageSrc1, imageYCrCb1);
+
+	Mat imageYCrCb2;
+	BGRtoYCrCb(inputImageSrc2, imageYCrCb2);
+
+	std::vector<Mat> image1Split;
+	split(imageYCrCb1, image1Split);
+
+	std::vector<Mat> image2Split;
+	split(imageYCrCb2, image2Split);
+
   // Visualiser l'image
-  imshow("InputImageSrcBGR", inputImageSrc);
-  cvWaitKey();
+  // imshow("InputImageSrcBGR", inputImageSrc1);
+	// imshow("Image1 Y", image1Split[0]);
+	// imshow("Image1 Cr", image1Split[1]);
+	// imshow("Image1 Cb", image1Split[2]);
+
+	// #TODO Sauver ces images pour le rapport
+
+	std::cout << "EQM : " << eqm(image1Split[0], image2Split[0]) << '\n';
+	std::cout << "PSNR : " << psnr(image1Split[0], image2Split[0]) << '\n';
+
+	Mat distoMap;
+	distortionMap(image1Split, image2Split, distoMap);
+	imshow("Distortion Map", distoMap);
+
+  // cvWaitKey();
 
   return 0;
 }
