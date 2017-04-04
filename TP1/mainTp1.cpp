@@ -1,4 +1,5 @@
 #include <iostream>
+#include <assert.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/contrib/contrib.hpp>
@@ -20,6 +21,28 @@ void computeHistogram(const Mat& inputComponent, Mat& myHist)
 
 	/// Compute the histograms:
 	calcHist( &inputComponent, 1, 0, Mat(), myHist, 1, &histSize, &histRange, uniform, accumulate );
+}
+
+//=======================================================================================
+// computeEntropy
+//=======================================================================================
+float computeEntropy(const Mat& inputComponent)
+{
+	Mat myHist;
+
+	computeHistogram(inputComponent,myHist);
+	std::cout << inputComponent << std::endl;
+
+	myHist /= inputComponent.total();
+
+    Mat logP;
+    cv::log(myHist,logP);
+
+    float entropy = -1*sum(myHist.mul(logP)).val[0];
+
+    std::cout << "Entropy : "<<entropy << std::endl;
+    return entropy;
+
 }
 
 //=======================================================================================
@@ -75,8 +98,7 @@ Mat norm_0_255(InputArray _src) {
 //=======================================================================================
 double eqm(const Mat & img1, const Mat & img2)
 {
-	// #TODO assert same img size
-
+	assert(img1.cols == img2.cols && img1.rows == img2.rows);
 	double result = 0;
 	for(int i = 0; i < img1.rows; i++) {
 		for(int j = 0; j < img1.cols; j++) {
@@ -94,6 +116,7 @@ double eqm(const Mat & img1, const Mat & img2)
 //=======================================================================================
 double psnr(const Mat & imgSrc, const Mat & imgDeg)
 {
+	assert(imgSrc.cols == imgDeg.cols && imgSrc.rows == imgDeg.rows);
 	// d c'est la dynamique = ensemble des valeurs possibles par pixel
 	int d = 255;
 	return 10 * log10((d * d) / eqm(imgSrc, imgDeg));
@@ -111,7 +134,6 @@ void distortionMap(const vector<Mat> & imgSrc, const vector<Mat> & imgDeg, Mat &
 		distoMapSplit.push_back(result);
 	}
 	imshow("coucou", distoMapSplit[0]);
-	std::cout << distoMapSplit[0] << '\n';
 	merge(distoMapSplit, distoMap);
 
 }
@@ -137,6 +159,9 @@ int main(int argc, char** argv){
   // Ouvrir l'image d'entr�e et v�rifier que l'ouverture du fichier se d�roule normalement
   inputImageSrc1 = imread(argv[1], CV_LOAD_IMAGE_COLOR);
 
+  imshow("InputImageSrcBGR", inputImageSrc1);
+  
+
   if(!inputImageSrc1.data ) { // Check for invalid input
     std::cout <<  "Could not open or find the image " << argv[1] << std::endl ;
 		waitKey(0); // Wait for a keystroke in the window
@@ -152,7 +177,7 @@ int main(int argc, char** argv){
     return -1;
   }
 
-
+ 
 	Mat imageYCrCb1;
 	BGRtoYCrCb(inputImageSrc1, imageYCrCb1);
 
@@ -166,21 +191,24 @@ int main(int argc, char** argv){
 	split(imageYCrCb2, image2Split);
 
   // Visualiser l'image
-  // imshow("InputImageSrcBGR", inputImageSrc1);
-	// imshow("Image1 Y", image1Split[0]);
-	// imshow("Image1 Cr", image1Split[1]);
-	// imshow("Image1 Cb", image1Split[2]);
-
+   imshow("InputImageSrcBGR", inputImageSrc1);
+	 imshow("Image1 Y", image1Split[0]);
+	 computeEntropy(image1Split[0]);
+	 waitKey();
+	 imshow("Image1 Cr", image1Split[1]);
+	 waitKey();
+	 imshow("Image1 Cb", image1Split[2]);
+	 waitKey();
 	// #TODO Sauver ces images pour le rapport
 
 	std::cout << "EQM : " << eqm(image1Split[0], image2Split[0]) << '\n';
 	std::cout << "PSNR : " << psnr(image1Split[0], image2Split[0]) << '\n';
+	
 
 	Mat distoMap;
 	distortionMap(image1Split, image2Split, distoMap);
 	imshow("Distortion Map", distoMap);
-
-  // cvWaitKey();
+	waitKey();
 
   return 0;
 }
