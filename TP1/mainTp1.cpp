@@ -25,19 +25,22 @@ void computeHistogram(const Mat& inputComponent, Mat& myHist)
 
 //=======================================================================================
 // computeEntropy
+//
+// Help find on : http://stackoverflow.com/questions/24930134/entropy-for-a-gray-image-in-opencv
+//
 //=======================================================================================
 float computeEntropy(const Mat& inputComponent)
 {
+	// Create Hist
 	Mat myHist;
-
 	computeHistogram(inputComponent,myHist);
-	std::cout << inputComponent << std::endl;
 
+	// Stats of Image
 	myHist /= inputComponent.total();
 
+	//Computed Entropy
     Mat logP;
     cv::log(myHist,logP);
-
     float entropy = -1*sum(myHist.mul(logP)).val[0];
 
     std::cout << "Entropy : "<<entropy << std::endl;
@@ -138,10 +141,33 @@ void distortionMap(const vector<Mat> & imgSrc, const vector<Mat> & imgDeg, Mat &
 
 }
 
+//=======================================================================================
+// convert a image from BGR to YCrCb
+//=======================================================================================
 void BGRtoYCrCb(const Mat & imgSrc, Mat & imgOut)
 {
 	cvtColor(imgSrc, imgOut, CV_BGR2YCrCb);
 }
+
+//=======================================================================================
+// recupération d'image
+//=======================================================================================
+std::vector<Mat>  recupImage(int argc, char** argv)
+{
+	std::vector<Mat> images;
+	for(int i = 1; i < argc ; i++)
+	{
+		Mat inputImage;
+		inputImage = imread(argv[i], CV_LOAD_IMAGE_COLOR);
+		if(!inputImage.data ) { // Check for invalid input
+    		std::cout <<  "Could not open or find the image " << argv[1] << std::endl ;
+			waitKey(0); // Wait for a keystroke in the window
+ 		 }
+		images.push_back(inputImage);
+	}
+	return images;
+}
+
 
 //=======================================================================================
 //=======================================================================================
@@ -153,6 +179,10 @@ int main(int argc, char** argv){
     std::cout << "No image data... At least one argument is required! \n";
     return -1;
   }
+
+  std::cout << "Nombre argument" << argc << std::endl;
+  std::vector<Mat> images = recupImage(argc, argv);
+
 
   Mat inputImageSrc1;
 
@@ -193,12 +223,8 @@ int main(int argc, char** argv){
   // Visualiser l'image
    imshow("InputImageSrcBGR", inputImageSrc1);
 	 imshow("Image1 Y", image1Split[0]);
-	 computeEntropy(image1Split[0]);
-	 waitKey();
 	 imshow("Image1 Cr", image1Split[1]);
-	 waitKey();
 	 imshow("Image1 Cb", image1Split[2]);
-	 waitKey();
 	// #TODO Sauver ces images pour le rapport
 
 	std::cout << "EQM : " << eqm(image1Split[0], image2Split[0]) << '\n';
