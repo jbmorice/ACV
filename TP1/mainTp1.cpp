@@ -43,7 +43,6 @@ float computeEntropy(const Mat& inputComponent)
     cv::log(myHist,logP);
     float entropy = -1*sum(myHist.mul(logP)).val[0];
 
-    std::cout << "Entropy : "<<entropy << std::endl;
     return entropy;
 
 }
@@ -206,13 +205,29 @@ int main(int argc, char** argv){
 
 	std::cout<< "-------- Distortion Map, EQM, PSNR --------" << std::endl;
 
-	for(int i = 1; i < imagesSplit.size(); i++)
+	for(int i = 0; i < imagesSplit.size(); i++)
 	{
-		Mat distoMap;
-		distortionMap(imagesSplit[0], imagesSplit[i], distoMap);
-		imshow("Distortion Map", distoMap);
-		waitKey();
+
+		if(i != 0)
+		{
+			Mat distoMap;
+			distortionMap(imagesSplit[0], imagesSplit[i], distoMap);
+			imshow("Distortion Map", distoMap);
+		}
 		
+		std::cout << "Image " << i << std::endl;
+		
+		std::cout << "EQM : " << eqm(imagesSplit[0][0],imagesSplit[i][0]) << std::endl;
+		std::cout << "PSNR : " << psnr(imagesSplit[0][0],imagesSplit[i][0]) << std::endl;
+		std::cout << "Entropy : " << computeEntropy(imagesSplit[i][0]) << std::endl;
+
+		Mat myHist;
+		computeHistogram(imagesSplit[i][0],myHist);
+		displayHistogram(myHist);
+
+		std::cout << "----------------" << std::endl;
+
+		waitKey();
 	}
 	
 	
