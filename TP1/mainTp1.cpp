@@ -26,7 +26,7 @@ void computeHistogram(const Mat& inputComponent, Mat& myHist)
 //=======================================================================================
 // computeEntropy
 //
-// Help find on : http://stackoverflow.com/questions/24930134/entropy-for-a-gray-image-in-opencv
+// Help found on : http://stackoverflow.com/questions/24930134/entropy-for-a-gray-image-in-opencv
 //
 //=======================================================================================
 float computeEntropy(const Mat& inputComponent)
@@ -136,7 +136,6 @@ void distortionMap(const vector<Mat> & imgSrc, const vector<Mat> & imgDeg, Mat &
 		result = ((imgSrc[i] - imgDeg[i]) + 155) / 2;
 		distoMapSplit.push_back(result);
 	}
-	imshow("coucou", distoMapSplit[0]);
 	merge(distoMapSplit, distoMap);
 
 }
@@ -175,66 +174,47 @@ std::vector<Mat>  recupImage(int argc, char** argv)
 //=======================================================================================
 //=======================================================================================
 int main(int argc, char** argv){
-  if (argc < 2){
-    std::cout << "No image data... At least one argument is required! \n";
-    return -1;
-  }
+	  
+	if (argc < 2){
+	    std::cout << "No image data... At least one argument is required! \n";
+	    return -1;
+	}
 
-  std::cout << "Nombre argument" << argc << std::endl;
-  std::vector<Mat> images = recupImage(argc, argv);
+	std::cout<< "--------Récupération Image--------" << std::endl;
+
+	std::vector<Mat> imagesBGR = recupImage(argc, argv);
+	std::vector<Mat> imagesYCrCb;
 
 
-  Mat inputImageSrc1;
+  	// Conversion en YCrCb
+  	for(int i = 0; i < imagesBGR.size() ; i++)
+	{
+		Mat imgYCrCb;
+		BGRtoYCrCb(imagesBGR[i],imgYCrCb);
+		imagesYCrCb.push_back(imgYCrCb);
+	}
 
-  // Ouvrir l'image d'entr�e et v�rifier que l'ouverture du fichier se d�roule normalement
-  inputImageSrc1 = imread(argv[1], CV_LOAD_IMAGE_COLOR);
+	std::cout<< "--------Split des Images--------" << std::endl;
 
-  imshow("InputImageSrcBGR", inputImageSrc1);
-  
+	std::vector<std::vector<Mat> > imagesSplit;
+	for(int i = 0; i < imagesYCrCb.size(); i++)
+	{
+		std::vector<Mat> imgSplit;
+		split(imagesYCrCb[i],imgSplit);
+		imagesSplit.push_back(imgSplit);
+	}
 
-  if(!inputImageSrc1.data ) { // Check for invalid input
-    std::cout <<  "Could not open or find the image " << argv[1] << std::endl ;
-		waitKey(0); // Wait for a keystroke in the window
-    return -1;
-  }
+	std::cout<< "-------- Distortion Map, EQM, PSNR --------" << std::endl;
 
-	Mat inputImageSrc2;
-	inputImageSrc2 = imread(argv[2], CV_LOAD_IMAGE_COLOR);
-
-  if(!inputImageSrc2.data ) { // Check for invalid input
-    std::cout <<  "Could not open or find the image " << argv[2] << std::endl ;
-		waitKey(0); // Wait for a keystroke in the window
-    return -1;
-  }
-
- 
-	Mat imageYCrCb1;
-	BGRtoYCrCb(inputImageSrc1, imageYCrCb1);
-
-	Mat imageYCrCb2;
-	BGRtoYCrCb(inputImageSrc2, imageYCrCb2);
-
-	std::vector<Mat> image1Split;
-	split(imageYCrCb1, image1Split);
-
-	std::vector<Mat> image2Split;
-	split(imageYCrCb2, image2Split);
-
-  // Visualiser l'image
-   imshow("InputImageSrcBGR", inputImageSrc1);
-	 imshow("Image1 Y", image1Split[0]);
-	 imshow("Image1 Cr", image1Split[1]);
-	 imshow("Image1 Cb", image1Split[2]);
-	// #TODO Sauver ces images pour le rapport
-
-	std::cout << "EQM : " << eqm(image1Split[0], image2Split[0]) << '\n';
-	std::cout << "PSNR : " << psnr(image1Split[0], image2Split[0]) << '\n';
+	for(int i = 1; i < imagesSplit.size(); i++)
+	{
+		Mat distoMap;
+		distortionMap(imagesSplit[0], imagesSplit[i], distoMap);
+		imshow("Distortion Map", distoMap);
+		waitKey();
+		
+	}
 	
-
-	Mat distoMap;
-	distortionMap(image1Split, image2Split, distoMap);
-	imshow("Distortion Map", distoMap);
-	waitKey();
-
+	
   return 0;
 }
