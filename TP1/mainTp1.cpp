@@ -50,7 +50,7 @@ float computeEntropy(const Mat& inputComponent)
 //=======================================================================================
 // displayHistogram
 //=======================================================================================
-void displayHistogram(const Mat& myHist)
+Mat displayHistogram(const Mat& myHist)
 {
 	// Establish the number of bins
 	int histSize = 256;
@@ -71,6 +71,7 @@ void displayHistogram(const Mat& myHist)
 	namedWindow("Display Histo", CV_WINDOW_AUTOSIZE );
 	imshow("Display Histo", histImage );
 	cvWaitKey();
+	return histImage;
 }
 
 //=======================================================================================
@@ -203,17 +204,10 @@ int main(int argc, char** argv){
 		imagesSplit.push_back(imgSplit);
 	}
 
-	std::cout<< "-------- Distortion Map, EQM, PSNR --------" << std::endl;
+	std::cout<< "-------- Compute : Distortion Map, EQM, PSNR --------" << std::endl;
 
 	for(int i = 0; i < imagesSplit.size(); i++)
 	{
-
-		if(i != 0)
-		{
-			Mat distoMap;
-			distortionMap(imagesSplit[0], imagesSplit[i], distoMap);
-			imshow("Distortion Map", distoMap);
-		}
 
 		std::cout << "Image " << i << std::endl;
 		
@@ -222,14 +216,21 @@ int main(int argc, char** argv){
 			std::cout << "EQM : " << eqm(imagesSplit[0][0],imagesSplit[i][0]) << std::endl;
 			std::cout << "PSNR : " << psnr(imagesSplit[0][0],imagesSplit[i][0]) << std::endl;
 		}
-		
+
 		std::cout << "Entropy : " << computeEntropy(imagesSplit[i][0]) << std::endl;
 
 		Mat myHist;
 		computeHistogram(imagesSplit[i][0],myHist);
-		displayHistogram(myHist);
+		imwrite ( "ImageRes/hist.jpg" , displayHistogram(myHist));
 
-		std::cout << "----------------" << std::endl;
+		std::cout << "-------- Distortion Map--------" << std::endl;
+
+		if(i != 0)
+		{
+			Mat distoMap;
+			distortionMap(imagesSplit[0], imagesSplit[i], distoMap);
+			imshow("Distortion Map", distoMap);
+		}
 
 		waitKey();
 	}
