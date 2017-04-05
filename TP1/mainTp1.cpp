@@ -214,11 +214,15 @@ int main(int argc, char** argv){
 			distortionMap(imagesSplit[0], imagesSplit[i], distoMap);
 			imshow("Distortion Map", distoMap);
 		}
-		
+
 		std::cout << "Image " << i << std::endl;
 		
-		std::cout << "EQM : " << eqm(imagesSplit[0][0],imagesSplit[i][0]) << std::endl;
-		std::cout << "PSNR : " << psnr(imagesSplit[0][0],imagesSplit[i][0]) << std::endl;
+		if(i != 0)
+		{
+			std::cout << "EQM : " << eqm(imagesSplit[0][0],imagesSplit[i][0]) << std::endl;
+			std::cout << "PSNR : " << psnr(imagesSplit[0][0],imagesSplit[i][0]) << std::endl;
+		}
+		
 		std::cout << "Entropy : " << computeEntropy(imagesSplit[i][0]) << std::endl;
 
 		Mat myHist;
