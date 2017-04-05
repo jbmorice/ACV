@@ -1,10 +1,27 @@
 #include <iostream>
+#include <string>
+#include <sstream>
 #include <assert.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/contrib/contrib.hpp>
 
+// MACRO pour avoir le nom d'une variable.
+#define getName(var) #var
+
 using namespace cv;
+
+
+//=======================================================================================
+// convert int into string
+//=======================================================================================
+
+string toString(int i) // convert int to string
+{
+    std::stringstream value;
+    value << i;
+    return value.str();
+}
 
 //=======================================================================================
 // computeHistogram
@@ -41,7 +58,7 @@ float computeEntropy(const Mat& inputComponent)
 	//Computed Entropy
     Mat logP;
     cv::log(myHist,logP);
-    float entropy = -1*sum(myHist.mul(logP)).val[0];
+    float entropy = -1*sum(myHist.mul(logP))[0];
 
     return entropy;
 
@@ -221,9 +238,7 @@ int main(int argc, char** argv){
 
 		Mat myHist;
 		computeHistogram(imagesSplit[i][0],myHist);
-		imwrite ( "ImageRes/hist.jpg" , displayHistogram(myHist));
-
-		std::cout << "-------- Distortion Map--------" << std::endl;
+		imwrite ( "ImageRes/hist_"+ toString(i)+".jpg" , displayHistogram(myHist));
 
 		if(i != 0)
 		{
@@ -231,6 +246,8 @@ int main(int argc, char** argv){
 			distortionMap(imagesSplit[0], imagesSplit[i], distoMap);
 			imshow("Distortion Map", distoMap);
 		}
+
+		std::cout << "----------------" << std::endl;
 
 		waitKey();
 	}
