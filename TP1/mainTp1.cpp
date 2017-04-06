@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <assert.h>
+#include <math.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/contrib/contrib.hpp>
@@ -23,6 +24,21 @@ string toString(int i) // convert int to string
     return value.str();
 }
 
+
+//=======================================================================================
+// nombre d'échantillon d'un histogramme en Mat
+//=======================================================================================
+
+int nbSamplesHisto(const Mat& inputHisto) // convert int to string
+{
+	int res = 0;
+    for(int nbRows = 0; nbRows < inputHisto.rows; nbRows++)
+    {
+    	res += inputHisto.at<float>(nbRows);
+    }
+    return res;
+}
+
 //=======================================================================================
 // moyenne d'un histogramme en Mat
 //=======================================================================================
@@ -30,11 +46,43 @@ string toString(int i) // convert int to string
 float meanHisto(const Mat& inputHisto) // convert int to string
 {
 	float res = 0;
-	float diviseur = 0;
+	float diviseur = nbSamplesHisto(inputHisto);
     for(int nbRows = 0; nbRows < inputHisto.rows; nbRows++)
     {
     	res += inputHisto.at<float>(nbRows) * nbRows;
-    	diviseur += inputHisto.at<float>(nbRows);
+    }
+    return res/diviseur;
+}
+
+//=======================================================================================
+// moyenne d'un histogramme en Mat
+//=======================================================================================
+
+float standartDeviationHisto(const Mat& inputHisto) // convert int to string
+{
+	float res = 0;
+	float diviseur = nbSamplesHisto(inputHisto);
+	float moyenne = meanHisto(inputHisto);
+    for(int nbRows = 0; nbRows < inputHisto.rows; nbRows++)
+    {
+    	res += pow((nbRows - moyenne),2) * inputHisto.at<float>(nbRows);
+    }
+    return sqrt(res/diviseur);
+}
+
+//=======================================================================================
+// moyenne d'un histogramme en Mat
+//=======================================================================================
+
+float kurtosisHisto(const Mat& inputHisto) // convert int to string
+{
+	float res = 0;
+	float diviseur = nbSamplesHisto(inputHisto);
+	float moyenne = meanHisto(inputHisto);
+	float standartDeviation = standartDeviationHisto(inputHisto);
+    for(int nbRows = 0; nbRows < inputHisto.rows; nbRows++)
+    {
+    	res += pow(((nbRows)-moyenne)/standartDeviation,4) * inputHisto.at<float>(nbRows);
     }
     return res/diviseur;
 }
@@ -242,7 +290,7 @@ int main(int argc, char** argv){
 	for(int i = 0; i < imagesSplit.size(); i++)
 	{
 
-		std::cout << "Image " << i << std::endl;
+		std::cout << "Image " << i << "\n" << std::endl;
 		
 		if(i != 0)
 		{
@@ -250,7 +298,7 @@ int main(int argc, char** argv){
 			std::cout << "PSNR : " << psnr(imagesSplit[0][0],imagesSplit[i][0]) << std::endl;
 		}
 
-		std::cout << "Entropy : " << computeEntropy(imagesSplit[i][0]) << std::endl;
+		std::cout << "Entropy : " << computeEntropy(imagesSplit[i][0]) << "\n" << std::endl;
 
 		Mat myHist;
 		computeHistogram(imagesSplit[i][0],myHist);
@@ -270,16 +318,21 @@ int main(int argc, char** argv){
 			std::vector<Mat> distoMapYCrCbSplit;
 			split(distoMapYCrCb,distoMapYCrCbSplit);
 
-			std::cout << "Entropy de la Distortion Map : " << computeEntropy(distoMapYCrCbSplit[0]) << std::endl;
+			std::cout << "Entropy de la Distortion Map : " << computeEntropy(distoMapYCrCbSplit[0]) << "\n" << std::endl;
 
 			Mat myHistDisto;
 			computeHistogram(distoMapYCrCbSplit[0],myHistDisto);
 			imwrite ( "ImageRes/hist_disto_"+ toString(i)+".jpg" , displayHistogram(myHistDisto));
 
-			std::cout <<  "Moyenne Histo : " << meanHisto(myHistDisto) << std::endl;
+			std::cout <<  "-------- Calcul valeur pour kurtosis --------"<< std::endl;
+
+			std::cout <<  "MeanHisto : " << meanHisto(myHistDisto) << std::endl;
+			std::cout <<  "StandartDeviationHisto : " << standartDeviationHisto(myHistDisto) << std::endl;
+			std::cout <<  "KurtosisHisto : " << kurtosisHisto(myHistDisto)<< "\n" << std::endl;
 		}
 
 		std::cout << "----------------" << std::endl;
+		std::cout << "----------------\n"<< std::endl;
 
 		waitKey();
 	}
