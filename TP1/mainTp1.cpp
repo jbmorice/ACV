@@ -24,6 +24,22 @@ string toString(int i) // convert int to string
 }
 
 //=======================================================================================
+// moyenne d'un histogramme en Mat
+//=======================================================================================
+
+float meanHisto(const Mat& inputHisto) // convert int to string
+{
+	float res = 0;
+	float diviseur = 0;
+    for(int nbRows = 0; nbRows < inputHisto.rows; nbRows++)
+    {
+    	res += inputHisto.at<float>(nbRows) * nbRows;
+    	diviseur += inputHisto.at<float>(nbRows);
+    }
+    return res/diviseur;
+}
+
+//=======================================================================================
 // computeHistogram
 //=======================================================================================
 void computeHistogram(const Mat& inputComponent, Mat& myHist)
@@ -150,7 +166,7 @@ void distortionMap(const vector<Mat> & imgSrc, const vector<Mat> & imgDeg, Mat &
 	std::vector<Mat> distoMapSplit;
 	Mat result;
 	for(int i = 0; i < 3; i++) {
-		result = ((imgSrc[i] - imgDeg[i]) + 155) / 2;
+		result = ((imgSrc[i] - imgDeg[i]) + 255) / 2;
 		distoMapSplit.push_back(result);
 	}
 	merge(distoMapSplit, distoMap);
@@ -242,9 +258,25 @@ int main(int argc, char** argv){
 
 		if(i != 0)
 		{
+			std::cout<< "#### Distortion Map ####" << std::endl;
 			Mat distoMap;
 			distortionMap(imagesSplit[0], imagesSplit[i], distoMap);
-			imshow("Distortion Map", distoMap);
+			imwrite ( "ImageRes/disto_map_"+ toString(i)+".jpg" , distoMap);
+			distoMap = imread("ImageRes/disto_map_"+ toString(i)+".jpg", CV_LOAD_IMAGE_COLOR);
+
+			// Mettre l'image de distortion en YCrCb et la split pour l'utiliser avec l'entropy et l'histogramme
+			Mat distoMapYCrCb;
+			BGRtoYCrCb(distoMap,distoMapYCrCb);
+			std::vector<Mat> distoMapYCrCbSplit;
+			split(distoMapYCrCb,distoMapYCrCbSplit);
+
+			std::cout << "Entropy de la Distortion Map : " << computeEntropy(distoMapYCrCbSplit[0]) << std::endl;
+
+			Mat myHistDisto;
+			computeHistogram(distoMapYCrCbSplit[0],myHistDisto);
+			imwrite ( "ImageRes/hist_disto_"+ toString(i)+".jpg" , displayHistogram(myHistDisto));
+
+			std::cout <<  "Moyenne Histo : " << meanHisto(myHistDisto) << std::endl;
 		}
 
 		std::cout << "----------------" << std::endl;
