@@ -232,7 +232,7 @@ void BGRtoYCrCb(const Mat & imgSrc, Mat & imgOut)
 //=======================================================================================
 // recupération d'image
 //=======================================================================================
-std::vector<Mat>  recupImage(int argc, char** argv)
+std::vector<Mat> recupImage(int argc, char** argv)
 {
 	std::vector<Mat> images;
 	for(int i = 1; i < argc ; i++)
@@ -248,6 +248,14 @@ std::vector<Mat>  recupImage(int argc, char** argv)
 	return images;
 }
 
+//=======================================================================================
+// transformée en cosinus
+//=======================================================================================
+void dct(const Mat & imgIn, const Mat & imgOut)
+{
+    
+}
+
 
 //=======================================================================================
 //=======================================================================================
@@ -255,7 +263,7 @@ std::vector<Mat>  recupImage(int argc, char** argv)
 //=======================================================================================
 //=======================================================================================
 int main(int argc, char** argv){
-	  
+
 	if (argc < 2){
 	    std::cout << "No image data... At least one argument is required! \n";
 	    return -1;
@@ -291,7 +299,7 @@ int main(int argc, char** argv){
 	{
 
 		std::cout << "Image " << i << "\n" << std::endl;
-		
+
 		if(i != 0)
 		{
 			std::cout << "EQM : " << eqm(imagesSplit[0][0],imagesSplit[i][0]) << std::endl;
@@ -336,7 +344,7 @@ int main(int argc, char** argv){
 
 		waitKey();
 	}
-	
-	
+
+
   return 0;
 }

@@ -106,9 +106,6 @@ void computeHistogram(const Mat& inputComponent, Mat& myHist)
 
 //=======================================================================================
 // computeEntropy
-//
-// Help found on : http://stackoverflow.com/questions/24930134/entropy-for-a-gray-image-in-opencv
-//
 //=======================================================================================
 float computeEntropy(const Mat& inputComponent)
 {
@@ -119,12 +116,14 @@ float computeEntropy(const Mat& inputComponent)
 	// Stats of Image
 	myHist /= inputComponent.total();
 
-	//Computed Entropy
-    Mat logP;
-    cv::log(myHist,logP);
-    float entropy = -1*sum(myHist.mul(logP))[0];
+    float entropy = 0;
+    for(int i = 0; i < myHist.rows; i++) {
+        if(myHist.at<float>(i) != 0) {
+            entropy += myHist.at<float>(i) * log2(myHist.at<float>(i));            
+        }
+    }
 
-    return entropy;
+    return -1 * entropy;
 
 }
 
@@ -230,6 +229,14 @@ void BGRtoYCrCb(const Mat & imgSrc, Mat & imgOut)
 }
 
 //=======================================================================================
+// convert a image from YCrCb to BGR
+//=======================================================================================
+void YCrCbtoBGR(const Mat & imgSrc, Mat & imgOut)
+{
+	cvtColor(imgSrc, imgOut, CV_YCrCb2BGR);
+}
+
+//=======================================================================================
 // recupération d'image
 //=======================================================================================
 std::vector<Mat>  recupImage(int argc, char** argv)
@@ -255,7 +262,7 @@ std::vector<Mat>  recupImage(int argc, char** argv)
 //=======================================================================================
 //=======================================================================================
 int main(int argc, char** argv){
-	  
+
 	if (argc < 2){
 	    std::cout << "No image data... At least one argument is required! \n";
 	    return -1;
@@ -291,7 +298,7 @@ int main(int argc, char** argv){
 	{
 
 		std::cout << "Image " << i << "\n" << std::endl;
-		
+
 		if(i != 0)
 		{
 			std::cout << "EQM : " << eqm(imagesSplit[0][0],imagesSplit[i][0]) << std::endl;
@@ -309,7 +316,9 @@ int main(int argc, char** argv){
 			std::cout<< "#### Distortion Map ####" << std::endl;
 			Mat distoMap;
 			distortionMap(imagesSplit[0], imagesSplit[i], distoMap);
-			imwrite ( "ImageRes/disto_map_"+ toString(i)+".jpg" , distoMap);
+            Mat rgbDistoMap;
+            YCrCbtoBGR(distoMap, rgbDistoMap);
+			imwrite ( "ImageRes/disto_map_"+ toString(i)+".jpg" , rgbDistoMap);
 			distoMap = imread("ImageRes/disto_map_"+ toString(i)+".jpg", CV_LOAD_IMAGE_COLOR);
 
 			// Mettre l'image de distortion en YCrCb et la split pour l'utiliser avec l'entropy et l'histogramme
@@ -336,7 +345,7 @@ int main(int argc, char** argv){
 
 		waitKey();
 	}
-	
-	
+
+
   return 0;
 }
