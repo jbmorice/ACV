@@ -316,5 +316,14 @@ int main(int argc, char** argv){
 
 	waitKey();
 
+    std::vector<Mat> inputImageSplit;
+    split(inputImage, inputImageSplit);
+
+    std::vector<Mat> iDctImageSplit;
+    split(iDctImg, iDctImageSplit);
+
+    std::cout << "EQM : " << eqm(inputImageSplit[0], iDctImageSplit[0]) << '\n';
+    std::cout << "PSNR : " << psnr(inputImageSplit[0], iDctImageSplit[0]) << '\n';
+
   return 0;
 }
