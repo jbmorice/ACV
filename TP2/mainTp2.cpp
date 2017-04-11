@@ -106,9 +106,6 @@ void computeHistogram(const Mat& inputComponent, Mat& myHist)
 
 //=======================================================================================
 // computeEntropy
-//
-// Help found on : http://stackoverflow.com/questions/24930134/entropy-for-a-gray-image-in-opencv
-//
 //=======================================================================================
 float computeEntropy(const Mat& inputComponent)
 {
@@ -119,12 +116,14 @@ float computeEntropy(const Mat& inputComponent)
 	// Stats of Image
 	myHist /= inputComponent.total();
 
-	//Computed Entropy
-    Mat logP;
-    cv::log(myHist,logP);
-    float entropy = -1*sum(myHist.mul(logP))[0];
+    float entropy = 0;
+    for(int i = 0; i < myHist.rows; i++) {
+        if(myHist.at<float>(i) != 0) {
+            entropy += myHist.at<float>(i) * log2(myHist.at<float>(i));
+        }
+    }
 
-    return entropy;
+    return -1 * entropy;
 
 }
 
@@ -222,6 +221,33 @@ void distortionMap(const vector<Mat> & imgSrc, const vector<Mat> & imgDeg, Mat &
 }
 
 //=======================================================================================
+// discrete cosine transform
+//=======================================================================================
+void computeDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
+{
+    for(int i = 0; i < 3; i++) {
+        Mat dctRes(imgIn[i].size(), CV_32FC1);
+        dct(imgIn[i], dctRes);
+        imgOut.push_back(dctRes);
+    }
+
+}
+
+void computeInverseDCT(const vector<Mat> & imgIn, const vector<Mat> & imgOut)
+{
+	// Mat iDctRes;
+    // iDctRes.convertTo(iDctRes, CV_32F);
+	// for(int i = 0; i < 3; i++) {
+    //     imgIn[i].convertTo(imgIn[i], CV_32F);
+    //     idct(imgIn[i], iDctRes);
+    //     imshow("DCT", iDctRes);
+    //     waitKey(0);
+	// 	imgOut.push_back(iDctRes);
+	// }
+
+}
+
+//=======================================================================================
 // convert a image from BGR to YCrCb
 //=======================================================================================
 void BGRtoYCrCb(const Mat & imgSrc, Mat & imgOut)
@@ -230,30 +256,11 @@ void BGRtoYCrCb(const Mat & imgSrc, Mat & imgOut)
 }
 
 //=======================================================================================
-// recupération d'image
+// convert a image from YCrCb to BGR
 //=======================================================================================
-std::vector<Mat> recupImage(int argc, char** argv)
+void YCrCbtoBGR(const Mat & imgSrc, Mat & imgOut)
 {
-	std::vector<Mat> images;
-	for(int i = 1; i < argc ; i++)
-	{
-		Mat inputImage;
-		inputImage = imread(argv[i], CV_LOAD_IMAGE_COLOR);
-		if(!inputImage.data ) { // Check for invalid input
-    		std::cout <<  "Could not open or find the image " << argv[1] << std::endl ;
-			waitKey(0); // Wait for a keystroke in the window
- 		 }
-		images.push_back(inputImage);
-	}
-	return images;
-}
-
-//=======================================================================================
-// transformée en cosinus
-//=======================================================================================
-void dct(const Mat & imgIn, const Mat & imgOut)
-{
-    
+	cvtColor(imgSrc, imgOut, CV_YCrCb2BGR);
 }
 
 
@@ -271,80 +278,36 @@ int main(int argc, char** argv){
 
 	std::cout<< "--------Récupération Image--------" << std::endl;
 
-	std::vector<Mat> imagesBGR = recupImage(argc, argv);
-	std::vector<Mat> imagesYCrCb;
+    Mat inputImage;
+    inputImage = imread(argv[1], CV_LOAD_IMAGE_COLOR);
+    if(!inputImage.data ) { // Check for invalid input
+        std::cout <<  "Could not open or find the image " << argv[1] << std::endl;
+        waitKey(0); // Wait for a keystroke in the window
+     }
 
+	// Mat imgYCrCb;
+	// BGRtoYCrCb(inputImage, imgYCrCb);
+    // std::cout << imgYCrCb.type() << '\n';
 
-  	// Conversion en YCrCb
-  	for(int i = 0; i < imagesBGR.size() ; i++)
-	{
-		Mat imgYCrCb;
-		BGRtoYCrCb(imagesBGR[i],imgYCrCb);
-		imagesYCrCb.push_back(imgYCrCb);
-	}
+	std::cout<< "-------- Compute : DCT --------" << std::endl;
 
-	std::cout<< "--------Split des Images--------" << std::endl;
+    Mat img32F(inputImage.size(), CV_32FC1);
+    std::cout << "img32F type : " << img32F.type() << '\n';
 
-	std::vector<std::vector<Mat> > imagesSplit;
-	for(int i = 0; i < imagesYCrCb.size(); i++)
-	{
-		std::vector<Mat> imgSplit;
-		split(imagesYCrCb[i],imgSplit);
-		imagesSplit.push_back(imgSplit);
-	}
+    inputImage.convertTo(img32F, CV_32FC1);
 
-	std::cout<< "-------- Compute : Distortion Map, EQM, PSNR --------" << std::endl;
+    Mat imgYCrCb32F(img32F.size(), CV_32FC1);
+    BGRtoYCrCb(img32F, imgYCrCb32F);
 
-	for(int i = 0; i < imagesSplit.size(); i++)
-	{
+    std::vector<Mat> imgYCrCb32FSplit;
+    split(imgYCrCb32F, imgYCrCb32FSplit);
 
-		std::cout << "Image " << i << "\n" << std::endl;
+    std::vector<Mat> dctImgYCrCb32FSplit;
+    computeDCT(imgYCrCb32FSplit, dctImgYCrCb32FSplit);
 
-		if(i != 0)
-		{
-			std::cout << "EQM : " << eqm(imagesSplit[0][0],imagesSplit[i][0]) << std::endl;
-			std::cout << "PSNR : " << psnr(imagesSplit[0][0],imagesSplit[i][0]) << std::endl;
-		}
+    imshow("test", dctImgYCrCb32FSplit[0]/255);
 
-		std::cout << "Entropy : " << computeEntropy(imagesSplit[i][0]) << "\n" << std::endl;
-
-		Mat myHist;
-		computeHistogram(imagesSplit[i][0],myHist);
-		imwrite ( "ImageRes/hist_"+ toString(i)+".jpg" , displayHistogram(myHist));
-
-		if(i != 0)
-		{
-			std::cout<< "#### Distortion Map ####" << std::endl;
-			Mat distoMap;
-			distortionMap(imagesSplit[0], imagesSplit[i], distoMap);
-			imwrite ( "ImageRes/disto_map_"+ toString(i)+".jpg" , distoMap);
-			distoMap = imread("ImageRes/disto_map_"+ toString(i)+".jpg", CV_LOAD_IMAGE_COLOR);
-
-			// Mettre l'image de distortion en YCrCb et la split pour l'utiliser avec l'entropy et l'histogramme
-			Mat distoMapYCrCb;
-			BGRtoYCrCb(distoMap,distoMapYCrCb);
-			std::vector<Mat> distoMapYCrCbSplit;
-			split(distoMapYCrCb,distoMapYCrCbSplit);
-
-			std::cout << "Entropy de la Distortion Map : " << computeEntropy(distoMapYCrCbSplit[0]) << "\n" << std::endl;
-
-			Mat myHistDisto;
-			computeHistogram(distoMapYCrCbSplit[0],myHistDisto);
-			imwrite ( "ImageRes/hist_disto_"+ toString(i)+".jpg" , displayHistogram(myHistDisto));
-
-			std::cout <<  "-------- Calcul valeur pour kurtosis --------"<< std::endl;
-
-			std::cout <<  "MeanHisto : " << meanHisto(myHistDisto) << std::endl;
-			std::cout <<  "StandartDeviationHisto : " << standartDeviationHisto(myHistDisto) << std::endl;
-			std::cout <<  "KurtosisHisto : " << kurtosisHisto(myHistDisto)<< "\n" << std::endl;
-		}
-
-		std::cout << "----------------" << std::endl;
-		std::cout << "----------------\n"<< std::endl;
-
-		waitKey();
-	}
-
+	waitKey();
 
   return 0;
 }

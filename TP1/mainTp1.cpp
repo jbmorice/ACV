@@ -119,7 +119,7 @@ float computeEntropy(const Mat& inputComponent)
     float entropy = 0;
     for(int i = 0; i < myHist.rows; i++) {
         if(myHist.at<float>(i) != 0) {
-            entropy += myHist.at<float>(i) * log2(myHist.at<float>(i));            
+            entropy += myHist.at<float>(i) * log2(myHist.at<float>(i));
         }
     }
 
@@ -213,7 +213,7 @@ void distortionMap(const vector<Mat> & imgSrc, const vector<Mat> & imgDeg, Mat &
 	std::vector<Mat> distoMapSplit;
 	Mat result;
 	for(int i = 0; i < 3; i++) {
-		result = ((imgSrc[i] - imgDeg[i]) + 255) / 2;
+		result = ((imgSrc[i] - imgDeg[i]) + 128);
 		distoMapSplit.push_back(result);
 	}
 	merge(distoMapSplit, distoMap);
