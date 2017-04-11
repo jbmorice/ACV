@@ -119,11 +119,11 @@ float computeEntropy(const Mat& inputComponent)
     float entropy = 0;
     for(int i = 0; i < myHist.rows; i++) {
         if(myHist.at<float>(i) != 0) {
-            entropy += myHist.at<float>(i) * log2(myHist.at<float>(i));
+            entropy += -myHist.at<float>(i) * log2(myHist.at<float>(i));
         }
     }
 
-    return -1 * entropy;
+    return entropy;
 
 }
 
@@ -228,8 +228,6 @@ void computeDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
     for(int i = 0; i < 3; i++) {
         Mat dctRes(imgIn[i].size(), CV_32F);
         dct(imgIn[i], dctRes);
-        imshow("DCT", dctRes/255);
-        waitKey(0);
         imgOut.push_back(dctRes);
     }
 
@@ -240,11 +238,43 @@ void computeInverseDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
     for(int i = 0; i < 3; i++) {
         Mat iDctRes(imgIn[i].size(), CV_32F);
         idct(imgIn[i], iDctRes);
-        // imshow("DCT" + i, iDctRes);
-        // waitKey(0);
         imgOut.push_back(iDctRes);
     }
 
+}
+
+void visualizeDCT(const vector<Mat> & img)
+{
+    std::vector<Mat> imgIn = img;
+    for(int k = 0; k < 3; k++) {
+        double maxVal;
+        minMaxLoc(imgIn[k], NULL, &maxVal, NULL, NULL);
+
+        for(int i = 0; i < imgIn[k].rows; i++) {
+            for(int j = 0; j < imgIn[k].cols; j++) {
+                imgIn[k].at<float>(i, j) = log(1 + fabs(imgIn[k].at<float>(i, j))) / log(1 + maxVal) * 255;
+            }
+        }
+
+        Mat in(imgIn[k].size(), CV_8UC1);
+        imgIn[k].convertTo(in, CV_8UC1);
+        Mat out(imgIn[k].size(), CV_8UC1);
+        applyColorMap(in, out, COLORMAP_JET);
+        imshow("Coeffs DCT canal " + toString(k) , out);
+        waitKey(0);
+
+    }
+
+}
+
+void visualizeDCTHistograms(vector<Mat> & imgIn) {
+    for(int k = 0; k < 3; k++) {
+        Mat hist;
+        computeHistogram(norm_0_255(imgIn[k]), hist);
+        displayHistogram(hist);
+
+        std::cout << "Entropy DCT canal " << toString(k) << " : " << computeEntropy(imgIn[k]) << '\n';
+    }
 }
 
 //=======================================================================================
@@ -312,9 +342,8 @@ int main(int argc, char** argv){
     Mat iDctImg;
     iDctImgBGR32F.convertTo(iDctImg, CV_8UC3);
 
-    imshow("IDCT", iDctImg);
-
-	waitKey();
+    // imshow("IDCT", iDctImg);
+	// waitKey(0);
 
     std::vector<Mat> inputImageSplit;
     split(inputImage, inputImageSplit);
@@ -325,5 +354,10 @@ int main(int argc, char** argv){
     std::cout << "EQM : " << eqm(inputImageSplit[0], iDctImageSplit[0]) << '\n';
     std::cout << "PSNR : " << psnr(inputImageSplit[0], iDctImageSplit[0]) << '\n';
 
-  return 0;
+    // Coeff
+    std::cout << "Compute visualizeDCT" << '\n';
+    visualizeDCT(dctImgYCrCb32FSplit);
+    visualizeDCTHistograms(dctImgYCrCb32FSplit);
+
+    return 0;
 }
