@@ -1,0 +1,95 @@
+\documentclass[12pt]{report}
+
+%Vous souciez pas de tout les packages, j'ai oublié ce que fait la moitié d'entre eux
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[francais]{babel}
+%\usepackage{layout}
+\usepackage[left=3cm,right=3cm,top=3cm,bottom=3cm]{geometry}
+%\usepackage{setspace}
+\usepackage{soul}
+\usepackage[normalem]{ulem}
+%\usepackage{eurosym}
+%\usepackage{bookman}
+%\usepackage{charter}
+%\usepackage{newcent}
+%\usepackage{lmodern}
+%\usepackage{mathpazo}
+%\usepackage{mathptmx}
+%\usepackage{url}
+%\usepackage{verbatim}
+%\usepackage{moreverb}
+%\usepackage{listings}
+%\usepackage{fancyhdr}
+%\usepackage{wrapfig}
+\usepackage{color}
+%\usepackage{colortbl}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+%\usepackage{asmthm}
+%\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{tgtermes}
+\usepackage{titlesec}
+\usepackage[final]{pdfpages} 
+\usepackage{epsfig}
+\usepackage{comment}
+\usepackage{float}
+\usepackage{amsmath}
+\renewcommand{\emph}{\textit}
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+\titleformat*{\subsection}{\bfseries}
+
+%Information pour la page de garde
+
+\title{TP 1 - Introduction au codage d'image : EQM, PSNR, entropie, histogramme}
+\author{Jean-Baptiste \bsc{Morice}, Guillaume \bsc{Versal}}
+\date{\today}
+
+
+\begin{document}
+
+
+
+%Commande qui crée la page de garde
+\maketitle
+
+\tableofcontents
+
+\newpage
+\section*{Introduction}
+
+\section{Notre travail}
+
+\subsection{PSNR et cartes d'erreur}
+
+\subsection{Entropie}
+
+\subsection{Histogramme}
+
+\begin{comment}
+
+%Commande pour le sommaire
+
+\renewcommand{\contentsname}{\large Sommaire} % Change le nom en sommaire
+\setcounter{tocdepth}{2} % Défini la profondeur d'une table des matières
+\tableofcontents
+\newpage
+
+\end{comment}
+
+\newpage
+
+
+%Commande pour le sommaire des figures
+
+\renewcommand*\listfigurename{\large Liste des figures}
+\listoffigures
+\newpage
+
+
+\end{document}
