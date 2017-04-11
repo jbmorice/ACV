@@ -226,24 +226,24 @@ void distortionMap(const vector<Mat> & imgSrc, const vector<Mat> & imgDeg, Mat &
 void computeDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
 {
     for(int i = 0; i < 3; i++) {
-        Mat dctRes(imgIn[i].size(), CV_32FC1);
+        Mat dctRes(imgIn[i].size(), CV_32F);
         dct(imgIn[i], dctRes);
+        imshow("DCT", dctRes/255);
+        waitKey(0);
         imgOut.push_back(dctRes);
     }
 
 }
 
-void computeInverseDCT(const vector<Mat> & imgIn, const vector<Mat> & imgOut)
+void computeInverseDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
 {
-	// Mat iDctRes;
-    // iDctRes.convertTo(iDctRes, CV_32F);
-	// for(int i = 0; i < 3; i++) {
-    //     imgIn[i].convertTo(imgIn[i], CV_32F);
-    //     idct(imgIn[i], iDctRes);
-    //     imshow("DCT", iDctRes);
-    //     waitKey(0);
-	// 	imgOut.push_back(iDctRes);
-	// }
+    for(int i = 0; i < 3; i++) {
+        Mat iDctRes(imgIn[i].size(), CV_32F);
+        idct(imgIn[i], iDctRes);
+        // imshow("DCT" + i, iDctRes);
+        // waitKey(0);
+        imgOut.push_back(iDctRes);
+    }
 
 }
 
@@ -285,18 +285,13 @@ int main(int argc, char** argv){
         waitKey(0); // Wait for a keystroke in the window
      }
 
-	// Mat imgYCrCb;
-	// BGRtoYCrCb(inputImage, imgYCrCb);
-    // std::cout << imgYCrCb.type() << '\n';
-
 	std::cout<< "-------- Compute : DCT --------" << std::endl;
 
-    Mat img32F(inputImage.size(), CV_32FC1);
-    std::cout << "img32F type : " << img32F.type() << '\n';
+    Mat img32F(inputImage.size(), CV_32F);
 
-    inputImage.convertTo(img32F, CV_32FC1);
+    inputImage.convertTo(img32F, CV_32F);
 
-    Mat imgYCrCb32F(img32F.size(), CV_32FC1);
+    Mat imgYCrCb32F(img32F.size(), CV_32F);
     BGRtoYCrCb(img32F, imgYCrCb32F);
 
     std::vector<Mat> imgYCrCb32FSplit;
@@ -305,7 +300,19 @@ int main(int argc, char** argv){
     std::vector<Mat> dctImgYCrCb32FSplit;
     computeDCT(imgYCrCb32FSplit, dctImgYCrCb32FSplit);
 
-    imshow("test", dctImgYCrCb32FSplit[0]/255);
+    std::vector<Mat> iDctImgYCrCb32FSplit;
+    computeInverseDCT(dctImgYCrCb32FSplit, iDctImgYCrCb32FSplit);
+
+    Mat iDctImgYCrCb32F;
+    merge(iDctImgYCrCb32FSplit, iDctImgYCrCb32F);
+
+    Mat iDctImgBGR32F;
+    YCrCbtoBGR(iDctImgYCrCb32F, iDctImgBGR32F);
+
+    Mat iDctImg;
+    iDctImgBGR32F.convertTo(iDctImg, CV_8UC3);
+
+    imshow("IDCT", iDctImg);
 
 	waitKey();
 
