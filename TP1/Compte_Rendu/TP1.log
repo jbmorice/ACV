@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.7.4)  14 APR 2017 15:53
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.7.4)  14 APR 2017 16:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -883,11 +883,11 @@ Here is how much of TeX's memory you used:
  9377 multiletter control sequences out of 15000+600000
  44891 words of font info for 63 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 37i,7n,30p,422b,439s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 37i,7n,30p,694b,439s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/tex-gyre/q-ec.enc}{/usr/share/
 texmf/fonts/enc/dvips/tex-gyre/q-ec-sc.enc}</usr/share/texmf/fonts/type1/public
 /tex-gyre/qtmb.pfb></usr/share/texmf/fonts/type1/public/tex-gyre/qtmr.pfb>
-Output written on TP1.pdf (15 pages, 529708 bytes).
+Output written on TP1.pdf (15 pages, 530546 bytes).
 PDF statistics:
  85 PDF objects out of 1000 (max. 8388607)
  45 compressed objects within 1 object stream
