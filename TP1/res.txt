@@ -1,0 +1,61 @@
+--------Récupération Image--------
+--------Split des Images--------
+-------- Compute : Distortion Map, EQM, PSNR --------
+Image 0
+
+Entropy : 7.08043
+
+----------------
+----------------
+
+Image 1
+
+EQM : 4.71877
+PSNR : 41.3925
+Entropy : 7.1013
+
+#### Distortion Map ####
+Entropy de la Distortion Map : 2.95702
+
+-------- Calcul valeur pour kurtosis --------
+MeanHisto : 127.805
+StandartDeviationHisto : 2.16352
+KurtosisHisto : 8.20274
+
+----------------
+----------------
+
+Image 2
+
+EQM : 52.1242
+PSNR : 30.9604
+Entropy : 6.56066
+
+#### Distortion Map ####
+Entropy de la Distortion Map : 4.76122
+
+-------- Calcul valeur pour kurtosis --------
+MeanHisto : 127.378
+StandartDeviationHisto : 7.1929
+KurtosisHisto : 7.63942
+
+----------------
+----------------
+
+Image 3
+
+EQM : 246.224
+PSNR : 24.2175
+Entropy : 4.92139
+
+#### Distortion Map ####
+Entropy de la Distortion Map : 5.86993
+
+-------- Calcul valeur pour kurtosis --------
+MeanHisto : 128.087
+StandartDeviationHisto : 15.6906
+KurtosisHisto : 7.27241
+
+----------------
+----------------
+

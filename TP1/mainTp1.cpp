@@ -55,7 +55,7 @@ float meanHisto(const Mat& inputHisto) // convert int to string
 }
 
 //=======================================================================================
-// moyenne d'un histogramme en Mat
+// ecart type d'un histogramme en Mat
 //=======================================================================================
 
 float standartDeviationHisto(const Mat& inputHisto) // convert int to string
@@ -71,7 +71,7 @@ float standartDeviationHisto(const Mat& inputHisto) // convert int to string
 }
 
 //=======================================================================================
-// moyenne d'un histogramme en Mat
+// kurtosis d'un histogramme en Mat
 //=======================================================================================
 
 float kurtosisHisto(const Mat& inputHisto) // convert int to string
@@ -119,7 +119,7 @@ float computeEntropy(const Mat& inputComponent)
     float entropy = 0;
     for(int i = 0; i < myHist.rows; i++) {
         if(myHist.at<float>(i) != 0) {
-            entropy += myHist.at<float>(i) * log2(myHist.at<float>(i));
+            entropy += myHist.at<float>(i) * log2(myHist.at<float>(i));            
         }
     }
 
@@ -210,14 +210,18 @@ double psnr(const Mat & imgSrc, const Mat & imgDeg)
 //=======================================================================================
 void distortionMap(const vector<Mat> & imgSrc, const vector<Mat> & imgDeg, Mat & distoMap)
 {
+<<<<<<< Updated upstream
+	distoMap = imgSrc[0] - imgDeg[0] + 128;
+=======
 	std::vector<Mat> distoMapSplit;
 	Mat result;
 	for(int i = 0; i < 3; i++) {
-		result = ((imgSrc[i] - imgDeg[i]) + 128);
+		result = (imgSrc[i] - imgDeg[i]) + 128;
 		distoMapSplit.push_back(result);
 	}
 	merge(distoMapSplit, distoMap);
 
+>>>>>>> Stashed changes
 }
 
 //=======================================================================================
@@ -292,6 +296,14 @@ int main(int argc, char** argv){
 		imagesSplit.push_back(imgSplit);
 	}
 
+	for(int i = 0; i < imagesSplit.size(); i++)
+	{
+		for(int j = 0; j < imagesSplit[i].size(); j++)
+		{
+			imwrite ( "ImageRes/Image"+ toString(i)+ "_channel_"+ toString(j) +".jpg" , imagesSplit[i][j]);
+		}
+	}
+
 	std::cout<< "-------- Compute : Distortion Map, EQM, PSNR --------" << std::endl;
 
 	for(int i = 0; i < imagesSplit.size(); i++)
@@ -309,24 +321,19 @@ int main(int argc, char** argv){
 
 		Mat myHist;
 		computeHistogram(imagesSplit[i][0],myHist);
-		imwrite ( "ImageRes/hist_"+ toString(i)+".jpg" , displayHistogram(myHist));
+		
 
 		if(i != 0)
 		{
 			std::cout<< "#### Distortion Map ####" << std::endl;
 			Mat distoMap;
 			distortionMap(imagesSplit[0], imagesSplit[i], distoMap);
-            Mat rgbDistoMap;
-            YCrCbtoBGR(distoMap, rgbDistoMap);
-			imwrite ( "ImageRes/disto_map_"+ toString(i)+".jpg" , rgbDistoMap);
-			distoMap = imread("ImageRes/disto_map_"+ toString(i)+".jpg", CV_LOAD_IMAGE_COLOR);
+			std::vector<Mat> distoMapYCrCbSplit;
+			split(distoMap,distoMapYCrCbSplit);
+			imwrite ( "ImageRes/disto_map_"+ toString(i)+".jpg" , distoMapYCrCbSplit[0]);
 
 			// Mettre l'image de distortion en YCrCb et la split pour l'utiliser avec l'entropy et l'histogramme
-			Mat distoMapYCrCb;
-			BGRtoYCrCb(distoMap,distoMapYCrCb);
-			std::vector<Mat> distoMapYCrCbSplit;
-			split(distoMapYCrCb,distoMapYCrCbSplit);
-
+			
 			std::cout << "Entropy de la Distortion Map : " << computeEntropy(distoMapYCrCbSplit[0]) << "\n" << std::endl;
 
 			Mat myHistDisto;
