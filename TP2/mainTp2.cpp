@@ -90,6 +90,17 @@ float kurtosisHisto(const Mat& inputHisto) // convert int to string
 //=======================================================================================
 // computeHistogram
 //=======================================================================================
+Mat absoluteMat(const Mat & mat) {
+    Mat res(mat.size(), CV_32FC1);
+    for(int i = 0; i < mat.rows; i++) {
+        for(int j = 0; j < mat.cols; j++) {
+            // std::cout << "i : " << i << " j : " << j << " val : " << mat.at<float>(i, j) << '\n';
+            res.at<float>(i, j) = abs(mat.at<float>(i, j));
+        }
+    }
+    return res;
+}
+
 void computeHistogram(const Mat& inputComponent, Mat& myHist)
 {
 	/// Establish the number of bins
@@ -100,8 +111,19 @@ void computeHistogram(const Mat& inputComponent, Mat& myHist)
 	bool uniform = true;
 	bool accumulate = false;
 
-	/// Compute the histograms:
-	calcHist( &inputComponent, 1, 0, Mat(), myHist, 1, &histSize, &histRange, uniform, accumulate );
+	// Compute the histograms:
+    Mat absInputComponent = abs(inputComponent);
+
+    // // Snippet to check if two matrices are differents
+    // Mat diff = absInputComponent != absInputComponent;
+    // if (countNonZero(diff) == 0) {
+    //     std::cout << "diff" << '\n';
+    // }
+    // else {
+    //     std::cout << "pareil" << '\n';
+    // }
+
+	calcHist( &absInputComponent, 1, 0, Mat(), myHist, 1, &histSize, &histRange, uniform, accumulate );
 }
 
 //=======================================================================================
@@ -270,9 +292,11 @@ void visualizeDCT(const vector<Mat> & img)
 void visualizeDCTHistograms(vector<Mat> & imgIn) {
     for(int k = 0; k < 3; k++) {
         Mat hist;
+
         computeHistogram(norm_0_255(imgIn[k]), hist);
         displayHistogram(hist);
 
+        // #TODO les coeffs sont signés, il faudra modifier le calcul de H
         std::cout << "Entropy DCT canal " << toString(k) << " : " << computeEntropy(imgIn[k]) << '\n';
     }
 }
@@ -326,7 +350,6 @@ int main(int argc, char** argv){
 
     std::vector<Mat> imgYCrCb32FSplit;
     split(imgYCrCb32F, imgYCrCb32FSplit);
-
     std::vector<Mat> dctImgYCrCb32FSplit;
     computeDCT(imgYCrCb32FSplit, dctImgYCrCb32FSplit);
 
