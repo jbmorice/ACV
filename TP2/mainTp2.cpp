@@ -248,7 +248,8 @@ void distortionMap(const vector<Mat> & imgSrc, const vector<Mat> & imgDeg, Mat &
 void computeDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
 {
     for(int i = 0; i < 3; i++) {
-        Mat dctRes(imgIn[i].size(), CV_32F);
+        // Mat dctRes(imgIn[i].size(), CV_32F);
+        Mat dctRes;
         dct(imgIn[i], dctRes);
         imgOut.push_back(dctRes);
     }
@@ -258,7 +259,8 @@ void computeDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
 void computeInverseDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
 {
     for(int i = 0; i < 3; i++) {
-        Mat iDctRes(imgIn[i].size(), CV_32F);
+        // Mat iDctRes(imgIn[i].size(), CV_32F);
+        Mat iDctRes;
         idct(imgIn[i], iDctRes);
         imgOut.push_back(iDctRes);
     }
@@ -267,22 +269,26 @@ void computeInverseDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
 
 void visualizeDCT(const vector<Mat> & img)
 {
-    std::vector<Mat> imgIn = img;
     for(int k = 0; k < 3; k++) {
         double maxVal;
-        minMaxLoc(imgIn[k], NULL, &maxVal, NULL, NULL);
+        minMaxLoc(img[k], NULL, &maxVal, NULL, NULL);
 
-        for(int i = 0; i < imgIn[k].rows; i++) {
-            for(int j = 0; j < imgIn[k].cols; j++) {
-                imgIn[k].at<float>(i, j) = log(1 + fabs(imgIn[k].at<float>(i, j))) / log(1 + maxVal) * 255;
+        Mat res(img[k].size(), CV_32FC1);
+
+        for(int i = 0; i < img[k].rows; i++) {
+            for(int j = 0; j < img[k].cols; j++) {
+                res.at<float>(i, j) = log(1 + fabs(img[k].at<float>(i, j))) / log(1 + maxVal) * 255;
             }
         }
 
-        Mat in(imgIn[k].size(), CV_8UC1);
-        imgIn[k].convertTo(in, CV_8UC1);
-        Mat out(imgIn[k].size(), CV_8UC1);
-        applyColorMap(in, out, COLORMAP_JET);
-        imshow("Coeffs DCT canal " + toString(k) , out);
+        // Mat in(imgIn[k].size(), CV_8UC1);
+        // imgIn[k].convertTo(in, CV_8UC1);
+        // Mat out(imgIn[k].size(), CV_8UC1);
+        // applyColorMap(in, out, COLORMAP_JET);
+        // imshow("DCT", out);
+        // waitKey(0);
+
+        imshow("DCT", norm_0_255(res));
         waitKey(0);
 
     }
@@ -341,59 +347,61 @@ int main(int argc, char** argv){
 
 	std::cout<< "-------- Compute : DCT --------" << std::endl;
 
+    // Convertion de l'image source de uchar vers float 32 bits
     Mat img32F(inputImage.size(), CV_32F);
-
     inputImage.convertTo(img32F, CV_32F);
 
+    // Conversion de BGR float 32 bits vers YCrCb float 32 bits
     Mat imgYCrCb32F(img32F.size(), CV_32F);
     BGRtoYCrCb(img32F, imgYCrCb32F);
 
+    // Decomposition des canaux
     std::vector<Mat> imgYCrCb32FSplit;
     split(imgYCrCb32F, imgYCrCb32FSplit);
 
+    // Affichage du canal Y
+    imshow("Canal Y", norm_0_255(imgYCrCb32FSplit[0]));
+    waitKey();
+
+    // Calcul de la DCT
     std::vector<Mat> dctImgYCrCb32FSplit;
     computeDCT(imgYCrCb32FSplit, dctImgYCrCb32FSplit);
 
+    // Affichage des coeffs de la DCT
     visualizeDCT(dctImgYCrCb32FSplit);
 
-    // Annulation de coefficients
-    // int x = (inputImage.cols / 2);
-    // int y = (inputImage.rows / 2);
-    // int width = inputImage.cols - x;
-    // int height = inputImage.rows - y;
-    // Rect mask(x, y, width, height);
-    // std::vector<Mat> modDctImgYCrCb32FSplit;
-    //nullifyCoefficients(dctImgYCrCb32FSplit, modDctImgYCrCb32FSplit, mask);
-    // visualizeDCT(modDctImgYCrCb32FSplit);
-
+    // Calcul de la DCT inverse
     std::vector<Mat> iDctImgYCrCb32FSplit;
     computeInverseDCT(dctImgYCrCb32FSplit, iDctImgYCrCb32FSplit);
 
+    // Affichage du canal Y de la DCT inverse
+    imshow("Canal Y inverse", norm_0_255(iDctImgYCrCb32FSplit[0]));
+    waitKey();
+
+    // Fusion des canaux YCrCb
     Mat iDctImgYCrCb32F;
     merge(iDctImgYCrCb32FSplit, iDctImgYCrCb32F);
 
+    // Conversion de YCrCb vers BGR (float 32 bits)
     Mat iDctImgBGR32F;
     YCrCbtoBGR(iDctImgYCrCb32F, iDctImgBGR32F);
 
+    // Conversion en uchar pour l'affichage
     Mat iDctImg;
     iDctImgBGR32F.convertTo(iDctImg, CV_8UC3);
 
-    // imshow("IDCT", iDctImg);
-	// waitKey(0);
+    // Affichage de la DCT inverse
+    imshow("IDCT", iDctImg);
+	waitKey();
 
-    std::vector<Mat> inputImageSplit;
-    split(inputImage, inputImageSplit);
-
-    std::vector<Mat> iDctImageSplit;
-    split(iDctImg, iDctImageSplit);
-
-    std::cout << "EQM : " << eqm(inputImageSplit[0], iDctImageSplit[0]) << '\n';
-    std::cout << "PSNR : " << psnr(inputImageSplit[0], iDctImageSplit[0]) << '\n';
-
-    // Coeff
-    std::cout << "Compute visualizeDCT" << '\n';
-    visualizeDCT(dctImgYCrCb32FSplit);
-    visualizeDCTHistograms(dctImgYCrCb32FSplit);
+    // std::vector<Mat> inputImageSplit;
+    // split(inputImage, inputImageSplit);
+    //
+    // std::vector<Mat> iDctImageSplit;
+    // split(iDctImg, iDctImageSplit);
+    //
+    // std::cout << "EQM : " << eqm(inputImageSplit[0], iDctImageSplit[0]) << '\n';
+    // std::cout << "PSNR : " << psnr(inputImageSplit[0], iDctImageSplit[0]) << '\n';
 
     return 0;
 }
