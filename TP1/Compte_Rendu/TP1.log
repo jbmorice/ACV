@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.7.4)  11 APR 2017 14:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.7.4)  14 APR 2017 16:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -543,29 +543,29 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \float@box=\box34
 \@float@everytoks=\toks34
 \@floatcapt=\box35
-)
-No file TP1.aux.
+) (./TP1.aux)
 \openout1 = `TP1.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Try loading font information for T1+qtm on input line 54.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Try loading font information for T1+qtm on input line 55.
+
 (/usr/share/texmf/tex/latex/tex-gyre/t1qtm.fd
 File: t1qtm.fd 2009/09/25 v1.2 font definition file for T1/qtm
 )
-LaTeX Info: Redefining \degres on input line 54.
-LaTeX Info: Redefining \dots on input line 54.
-LaTeX Info: Redefining \up on input line 54.
+LaTeX Info: Redefining \degres on input line 55.
+LaTeX Info: Redefining \dots on input line 55.
+LaTeX Info: Redefining \up on input line 55.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -641,52 +641,256 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 \AtBeginShipoutBox=\box37
-LaTeX Font Info:    Try loading font information for U+msa on input line 59.
+LaTeX Font Info:    Try loading font information for U+msa on input line 60.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 59.
+LaTeX Font Info:    Try loading font information for U+msb on input line 60.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for U+rsfs on input line 59.
+LaTeX Font Info:    Try loading font information for U+rsfs on input line 60.
 
 (/usr/share/texlive/texmf-dist/tex/latex/jknapltx/ursfs.fd
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 ) [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-No file TP1.toc.
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./TP1.toc)
 \tf@toc=\write4
 \openout4 = `TP1.toc'.
 
-[1
+ [1
 
-] Excluding 'comment' comment. [2]
-No file TP1.lof.
+]
+Underfull \hbox (badness 10000) in paragraph at lines 70--71
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 76--77
+
+ []
+
+[2] <../smiley.jpg, id=15, 385.44pt x 216.81pt>
+File: ../smiley.jpg Graphic file (type jpg)
+ <use ../smiley.jpg>
+Package pdftex.def Info: ../smiley.jpg used on input line 93.
+(pdftex.def)             Requested size: 192.71953pt x 108.40472pt.
+
+<../ImageRes/Image0_channel_0.jpg, id=16, 513.92pt x 289.08pt>
+File: ../ImageRes/Image0_channel_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/Image0_channel_0.jpg>
+Package pdftex.def Info: ../ImageRes/Image0_channel_0.jpg used on input line 10
+0.
+(pdftex.def)             Requested size: 128.47968pt x 72.26982pt.
+
+<../ImageRes/Image0_channel_1.jpg, id=17, 513.92pt x 289.08pt>
+File: ../ImageRes/Image0_channel_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/Image0_channel_1.jpg>
+Package pdftex.def Info: ../ImageRes/Image0_channel_1.jpg used on input line 10
+1.
+(pdftex.def)             Requested size: 128.47968pt x 72.26982pt.
+
+<../ImageRes/Image0_channel_2.jpg, id=18, 513.92pt x 289.08pt>
+File: ../ImageRes/Image0_channel_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/Image0_channel_2.jpg>
+Package pdftex.def Info: ../ImageRes/Image0_channel_2.jpg used on input line 10
+2.
+(pdftex.def)             Requested size: 128.47968pt x 72.26982pt.
+
+<../smileyDegQ2.jpg, id=19, 385.44pt x 216.81pt>
+File: ../smileyDegQ2.jpg Graphic file (type jpg)
+ <use ../smileyDegQ2.jpg>
+Package pdftex.def Info: ../smileyDegQ2.jpg used on input line 110.
+(pdftex.def)             Requested size: 192.71953pt x 108.40472pt.
+
+[3 <../smiley.jpg> <../ImageRes/Image0_channel_0.jpg> <../ImageRes/Image0_chann
+el_1.jpg> <../ImageRes/Image0_channel_2.jpg>]
+<../ImageRes/Image3_channel_0.jpg, id=23, 513.92pt x 289.08pt>
+File: ../ImageRes/Image3_channel_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/Image3_channel_0.jpg>
+Package pdftex.def Info: ../ImageRes/Image3_channel_0.jpg used on input line 11
+7.
+(pdftex.def)             Requested size: 128.47968pt x 72.26982pt.
+
+<../ImageRes/Image3_channel_1.jpg, id=24, 513.92pt x 289.08pt>
+File: ../ImageRes/Image3_channel_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/Image3_channel_1.jpg>
+Package pdftex.def Info: ../ImageRes/Image3_channel_1.jpg used on input line 11
+8.
+(pdftex.def)             Requested size: 128.47968pt x 72.26982pt.
+
+<../ImageRes/Image3_channel_2.jpg, id=25, 513.92pt x 289.08pt>
+File: ../ImageRes/Image3_channel_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/Image3_channel_2.jpg>
+Package pdftex.def Info: ../ImageRes/Image3_channel_2.jpg used on input line 11
+9.
+(pdftex.def)             Requested size: 128.47968pt x 72.26982pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 132--133
+
+ []
+
+[4 <../smileyDegQ2.jpg> <../ImageRes/Image3_channel_0.jpg> <../ImageRes/Image3_
+channel_1.jpg> <../ImageRes/Image3_channel_2.jpg>]
+<../smileyDegQ80.jpg, id=29, 385.44pt x 216.81pt>
+File: ../smileyDegQ80.jpg Graphic file (type jpg)
+ <use ../smileyDegQ80.jpg>
+Package pdftex.def Info: ../smileyDegQ80.jpg used on input line 139.
+(pdftex.def)             Requested size: 192.71953pt x 108.40472pt.
+File: ../smileyDegQ80.jpg Graphic file (type jpg)
+
+<use ../smileyDegQ80.jpg>
+Package pdftex.def Info: ../smileyDegQ80.jpg used on input line 146.
+(pdftex.def)             Requested size: 192.71953pt x 108.40472pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 151--152
+
+ []
+
+<../smileyDegQ10.jpg, id=30, 385.44pt x 216.81pt>
+File: ../smileyDegQ10.jpg Graphic file (type jpg)
+ <use ../smileyDegQ10.jpg>
+Package pdftex.def Info: ../smileyDegQ10.jpg used on input line 157.
+(pdftex.def)             Requested size: 192.71953pt x 108.40472pt.
+File: ../smileyDegQ10.jpg Graphic file (type jpg)
+
+<use ../smileyDegQ10.jpg>
+Package pdftex.def Info: ../smileyDegQ10.jpg used on input line 164.
+(pdftex.def)             Requested size: 192.71953pt x 108.40472pt.
+ [5 <../smileyDegQ80.jpg> <../smileyDegQ10.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 169--170
+
+ []
+
+File: ../smileyDegQ2.jpg Graphic file (type jpg)
+<use ../smileyDegQ2.jpg>
+Package pdftex.def Info: ../smileyDegQ2.jpg used on input line 175.
+(pdftex.def)             Requested size: 192.71953pt x 108.40472pt.
+File: ../smileyDegQ2.jpg Graphic file (type jpg)
+ <use ../smileyDegQ2.jpg>
+Package pdftex.def Info: ../smileyDegQ2.jpg used on input line 182.
+(pdftex.def)             Requested size: 192.71953pt x 108.40472pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 187--188
+
+ []
+
+<../ImageRes/f(PSNR).png, id=34, 570.13pt x 330.23375pt>
+File: ../ImageRes/f(PSNR).png Graphic file (type png)
+
+<use ../ImageRes/f(PSNR).png>
+Package pdftex.def Info: ../ImageRes/f(PSNR).png used on input line 193.
+(pdftex.def)             Requested size: 456.10463pt x 264.18735pt.
+
+Overfull \hbox (12.52615pt too wide) in paragraph at lines 193--194
+ [] 
+ []
+
+[6] <../ImageRes/entropie.jpg, id=39, 607.26875pt x 341.275pt>
+File: ../ImageRes/entropie.jpg Graphic file (type jpg)
+
+<use ../ImageRes/entropie.jpg>
+Package pdftex.def Info: ../ImageRes/entropie.jpg used on input line 210.
+(pdftex.def)             Requested size: 485.81566pt x 273.02036pt.
+
+Overfull \hbox (42.23718pt too wide) in paragraph at lines 210--211
+ [] 
+ []
+
+[7 <../ImageRes/f(PSNR).png>] [8 <../ImageRes/entropie.jpg>]
+<../ImageRes/hist_0.jpg, id=46, 513.92pt x 401.5pt>
+File: ../ImageRes/hist_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/hist_0.jpg>
+Package pdftex.def Info: ../ImageRes/hist_0.jpg used on input line 226.
+(pdftex.def)             Requested size: 256.95937pt x 200.7495pt.
+
+<../ImageRes/hist_1.jpg, id=47, 513.92pt x 401.5pt>
+File: ../ImageRes/hist_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/hist_1.jpg>
+Package pdftex.def Info: ../ImageRes/hist_1.jpg used on input line 233.
+(pdftex.def)             Requested size: 256.95937pt x 200.7495pt.
+
+<../ImageRes/hist_2.jpg, id=48, 513.92pt x 401.5pt>
+File: ../ImageRes/hist_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/hist_2.jpg>
+Package pdftex.def Info: ../ImageRes/hist_2.jpg used on input line 240.
+(pdftex.def)             Requested size: 256.95937pt x 200.7495pt.
+ [9 <../ImageRes/hist_0.jpg> <../ImageRes/hist_1.jpg>] <../ImageRes/hist_3.jpg,
+ id=52, 513.92pt x 401.5pt>
+File: ../ImageRes/hist_3.jpg Graphic file (type jpg)
+
+<use ../ImageRes/hist_3.jpg>
+Package pdftex.def Info: ../ImageRes/hist_3.jpg used on input line 247.
+(pdftex.def)             Requested size: 256.95937pt x 200.7495pt.
+
+<../ImageRes/hist_disto_1.jpg, id=53, 513.92pt x 401.5pt>
+File: ../ImageRes/hist_disto_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/hist_disto_1.jpg>
+Package pdftex.def Info: ../ImageRes/hist_disto_1.jpg used on input line 258.
+(pdftex.def)             Requested size: 256.95937pt x 200.7495pt.
+ [10 <../ImageRes/hist_2.jpg> <../ImageRes/hist_3.jpg>] <../ImageRes/hist_disto
+_2.jpg, id=57, 513.92pt x 401.5pt>
+File: ../ImageRes/hist_disto_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/hist_disto_2.jpg>
+Package pdftex.def Info: ../ImageRes/hist_disto_2.jpg used on input line 271.
+(pdftex.def)             Requested size: 256.95937pt x 200.7495pt.
+
+<../ImageRes/hist_disto_3.jpg, id=58, 513.92pt x 401.5pt>
+File: ../ImageRes/hist_disto_3.jpg Graphic file (type jpg)
+
+<use ../ImageRes/hist_disto_3.jpg>
+Package pdftex.def Info: ../ImageRes/hist_disto_3.jpg used on input line 284.
+(pdftex.def)             Requested size: 256.95937pt x 200.7495pt.
+ [11 <../ImageRes/hist_disto_1.jpg> <../ImageRes/hist_disto_2.jpg>] [12 <../Ima
+geRes/hist_disto_3.jpg>]
+<../ImageRes/entropie_erreur.jpg, id=66, 607.26875pt x 341.275pt>
+File: ../ImageRes/entropie_erreur.jpg Graphic file (type jpg)
+
+<use ../ImageRes/entropie_erreur.jpg>
+Package pdftex.def Info: ../ImageRes/entropie_erreur.jpg used on input line 302
+.
+(pdftex.def)             Requested size: 485.81566pt x 273.02036pt.
+
+Overfull \hbox (42.23718pt too wide) in paragraph at lines 302--303
+ [] 
+ []
+
+Excluding 'comment' comment. [13 <../ImageRes/entropie_erreur.jpg>] (./TP1.lof)
 \tf@lof=\write5
 \openout5 = `TP1.lof'.
 
-[3
+[14
 
 ] (./TP1.aux) ) 
 Here is how much of TeX's memory you used:
- 5944 strings out of 493105
- 80339 string characters out of 6137073
- 159601 words of memory out of 5000000
- 9271 multiletter control sequences out of 15000+600000
- 36957 words of font info for 42 fonts, out of 8000000 for 9000
+ 6088 strings out of 493105
+ 83516 string characters out of 6137073
+ 163601 words of memory out of 5000000
+ 9377 multiletter control sequences out of 15000+600000
+ 44891 words of font info for 63 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 37i,6n,30p,269b,439s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 37i,7n,30p,694b,439s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/tex-gyre/q-ec.enc}{/usr/share/
 texmf/fonts/enc/dvips/tex-gyre/q-ec-sc.enc}</usr/share/texmf/fonts/type1/public
 /tex-gyre/qtmb.pfb></usr/share/texmf/fonts/type1/public/tex-gyre/qtmr.pfb>
-Output written on TP1.pdf (4 pages, 56218 bytes).
+Output written on TP1.pdf (15 pages, 530546 bytes).
 PDF statistics:
- 29 PDF objects out of 1000 (max. 8388607)
- 20 compressed objects within 1 object stream
+ 85 PDF objects out of 1000 (max. 8388607)
+ 45 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 101 words of extra memory for PDF output out of 10000 (max. 10000000)
 

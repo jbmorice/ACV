@@ -1,1 +1,21 @@
 \select@language {french}
+\contentsline {figure}{\numberline {1}{\ignorespaces Image originale}}{3}
+\contentsline {figure}{\numberline {2}{\ignorespaces Image originale selon les canaux Y, Cr et Cb}}{3}
+\contentsline {figure}{\numberline {3}{\ignorespaces Image JPEG Q2}}{4}
+\contentsline {figure}{\numberline {4}{\ignorespaces Image JPEG Q2 selon les canaux Y, Cr et Cb}}{4}
+\contentsline {figure}{\numberline {5}{\ignorespaces Image compress\IeC {\'e}e JPEG Q80 }}{5}
+\contentsline {figure}{\numberline {6}{\ignorespaces Carte d'erreur de l'image compress\IeC {\'e}e JPEG Q80 }}{5}
+\contentsline {figure}{\numberline {7}{\ignorespaces Image compress\IeC {\'e}e JPEG Q10 }}{5}
+\contentsline {figure}{\numberline {8}{\ignorespaces Carte d'erreur de l'image compress\IeC {\'e}e JPEG Q10 }}{6}
+\contentsline {figure}{\numberline {9}{\ignorespaces Image compress\IeC {\'e}e JPEG Q2 }}{6}
+\contentsline {figure}{\numberline {10}{\ignorespaces Carte d'erreur de l'image compress\IeC {\'e}e JPEG Q2 }}{6}
+\contentsline {figure}{\numberline {11}{\ignorespaces Courbe taille en Bits en fonction du PSNR }}{7}
+\contentsline {figure}{\numberline {12}{\ignorespaces Entropie des images}}{8}
+\contentsline {figure}{\numberline {13}{\ignorespaces Histogramme image originale}}{9}
+\contentsline {figure}{\numberline {14}{\ignorespaces Histogramme image d\IeC {\'e}grad\IeC {\'e}e Q80 }}{9}
+\contentsline {figure}{\numberline {15}{\ignorespaces Histogramme image d\IeC {\'e}grad\IeC {\'e}e Q10 }}{10}
+\contentsline {figure}{\numberline {16}{\ignorespaces Histogramme image d\IeC {\'e}grad\IeC {\'e}e Q2 }}{10}
+\contentsline {figure}{\numberline {17}{\ignorespaces Histogramme carte d'erreur Q80 }}{11}
+\contentsline {figure}{\numberline {18}{\ignorespaces Histogramme carte d'erreur Q10 }}{11}
+\contentsline {figure}{\numberline {19}{\ignorespaces Histogramme carte d'erreur Q2 }}{12}
+\contentsline {figure}{\numberline {20}{\ignorespaces Entropie des images}}{13}
