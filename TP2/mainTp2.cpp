@@ -281,15 +281,12 @@ void visualizeDCT(const vector<Mat> & img)
             }
         }
 
-        // Mat in(imgIn[k].size(), CV_8UC1);
-        // imgIn[k].convertTo(in, CV_8UC1);
-        // Mat out(imgIn[k].size(), CV_8UC1);
-        // applyColorMap(in, out, COLORMAP_JET);
-        // imshow("DCT", out);
-        // waitKey();
-
-        imshow("DCT", norm_0_255(res));
-        waitKey(0);
+        Mat in(res.size(), CV_8UC1);
+        res.convertTo(in, CV_8UC1);
+        Mat out(res.size(), CV_8UC1);
+        applyColorMap(in, out, COLORMAP_JET);
+        imshow("DCT", out);
+        waitKey();
 
     }
 
