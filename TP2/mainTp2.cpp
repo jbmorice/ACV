@@ -394,7 +394,6 @@ int main(int argc, char** argv){
     std::cout << "Compute visualizeDCT" << '\n';
     visualizeDCT(dctImgYCrCb32FSplit);
     visualizeDCTHistograms(dctImgYCrCb32FSplit);
->>>>>>> parent of ca7e73e... Progress
 
     return 0;
 }
