@@ -24,6 +24,7 @@ string toString(int i) // convert int to string
     return value.str();
 }
 
+
 //=======================================================================================
 // nombre d'échantillon d'un histogramme en Mat
 //=======================================================================================
@@ -89,6 +90,16 @@ float kurtosisHisto(const Mat& inputHisto) // convert int to string
 //=======================================================================================
 // computeHistogram
 //=======================================================================================
+Mat absoluteMat(const Mat & mat) {
+    Mat res(mat.size(), CV_32FC1);
+    for(int i = 0; i < mat.rows; i++) {
+        for(int j = 0; j < mat.cols; j++) {
+            // std::cout << "i : " << i << " j : " << j << " val : " << mat.at<float>(i, j) << '\n';
+            res.at<float>(i, j) = abs(mat.at<float>(i, j));
+        }
+    }
+    return res;
+}
 
 void computeHistogram(const Mat& inputComponent, Mat& myHist)
 {
@@ -247,29 +258,9 @@ void computeDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
 void computeInverseDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
 {
     for(int i = 0; i < 3; i++) {
-        // Mat iDctRes(imgIn[i].size(), CV_32F);
-        Mat iDctRes;
+        Mat iDctRes(imgIn[i].size(), CV_32F);
         idct(imgIn[i], iDctRes);
-        imshow("test", norm_0_255(iDctRes));
-        cvWaitKey();
         imgOut.push_back(iDctRes);
-    }
-
-}
-
-void nullifyCoefficients(const vector<Mat> & imgIn, vector<Mat> & imgOut, const Rect mask)
-{
-    for(int k = 0; k < 3; k++) {
-        // Mat res(imgIn[k].size(), CV_32F);
-        Mat res;
-        imgIn[k].convertTo(res, CV_32FC1);
-        // res(mask) = Scalar(0);
-        double maxVal;
-        double minVal;
-        minMaxLoc(imgIn[k], &minVal, &maxVal, NULL, NULL);
-        std::cout << "min : " << minVal << " max : " << maxVal << '\n';
-        // res(mask).setTo(0);
-        imgOut.push_back(res);
     }
 
 }
@@ -287,14 +278,11 @@ void visualizeDCT(const vector<Mat> & img)
             }
         }
 
-        // Mat in(imgIn[k].size(), CV_8UC1);
-        // imgIn[k].convertTo(in, CV_8UC1);
-        // Mat out(imgIn[k].size(), CV_8UC1);
-        // applyColorMap(in, out, COLORMAP_JET);
-        // imshow("Coeffs DCT" , out);
-
-        imshow("ttt", norm_0_255(imgIn[k]));
-
+        Mat in(imgIn[k].size(), CV_8UC1);
+        imgIn[k].convertTo(in, CV_8UC1);
+        Mat out(imgIn[k].size(), CV_8UC1);
+        applyColorMap(in, out, COLORMAP_JET);
+        imshow("Coeffs DCT canal " + toString(k) , out);
         waitKey(0);
 
     }
@@ -308,6 +296,7 @@ void visualizeDCTHistograms(vector<Mat> & imgIn) {
         computeHistogram(norm_0_255(imgIn[k]), hist);
         displayHistogram(hist);
 
+        // #TODO les coeffs sont signés, il faudra modifier le calcul de H
         std::cout << "Entropy DCT canal " << toString(k) << " : " << computeEntropy(imgIn[k]) << '\n';
     }
 }
@@ -341,7 +330,7 @@ int main(int argc, char** argv){
 	    return -1;
 	}
 
-	std::cout<< "--------Load Image--------" << std::endl;
+	std::cout<< "--------Récupération Image--------" << std::endl;
 
     Mat inputImage;
     inputImage = imread(argv[1], CV_LOAD_IMAGE_COLOR);
@@ -350,11 +339,7 @@ int main(int argc, char** argv){
         waitKey(0); // Wait for a keystroke in the window
      }
 
-    std::cout<< "-------- Source characteristics --------" << std::endl;
-
-    // #TODO entropy and histo
-
-	std::cout<< "-------- DCT --------" << std::endl;
+	std::cout<< "-------- Compute : DCT --------" << std::endl;
 
     Mat img32F(inputImage.size(), CV_32F);
 
@@ -368,7 +353,7 @@ int main(int argc, char** argv){
 
     std::vector<Mat> dctImgYCrCb32FSplit;
     computeDCT(imgYCrCb32FSplit, dctImgYCrCb32FSplit);
-    
+
     visualizeDCT(dctImgYCrCb32FSplit);
 
     // Annulation de coefficients
@@ -380,6 +365,36 @@ int main(int argc, char** argv){
     // std::vector<Mat> modDctImgYCrCb32FSplit;
     //nullifyCoefficients(dctImgYCrCb32FSplit, modDctImgYCrCb32FSplit, mask);
     // visualizeDCT(modDctImgYCrCb32FSplit);
+
+    std::vector<Mat> iDctImgYCrCb32FSplit;
+    computeInverseDCT(dctImgYCrCb32FSplit, iDctImgYCrCb32FSplit);
+
+    Mat iDctImgYCrCb32F;
+    merge(iDctImgYCrCb32FSplit, iDctImgYCrCb32F);
+
+    Mat iDctImgBGR32F;
+    YCrCbtoBGR(iDctImgYCrCb32F, iDctImgBGR32F);
+
+    Mat iDctImg;
+    iDctImgBGR32F.convertTo(iDctImg, CV_8UC3);
+
+    // imshow("IDCT", iDctImg);
+	// waitKey(0);
+
+    std::vector<Mat> inputImageSplit;
+    split(inputImage, inputImageSplit);
+
+    std::vector<Mat> iDctImageSplit;
+    split(iDctImg, iDctImageSplit);
+
+    std::cout << "EQM : " << eqm(inputImageSplit[0], iDctImageSplit[0]) << '\n';
+    std::cout << "PSNR : " << psnr(inputImageSplit[0], iDctImageSplit[0]) << '\n';
+
+    // Coeff
+    std::cout << "Compute visualizeDCT" << '\n';
+    visualizeDCT(dctImgYCrCb32FSplit);
+    visualizeDCTHistograms(dctImgYCrCb32FSplit);
+>>>>>>> parent of ca7e73e... Progress
 
     return 0;
 }
