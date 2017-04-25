@@ -365,65 +365,21 @@ int main(int argc, char** argv){
 
     std::vector<Mat> imgYCrCb32FSplit;
     split(imgYCrCb32F, imgYCrCb32FSplit);
+
     std::vector<Mat> dctImgYCrCb32FSplit;
     computeDCT(imgYCrCb32FSplit, dctImgYCrCb32FSplit);
-
-    // std::vector<Mat> iDctImgYCrCb32FSplit;
-    // computeInverseDCT(dctImgYCrCb32FSplit, iDctImgYCrCb32FSplit);
-    //
-    // Mat iDctImgYCrCb32F;
-    // merge(iDctImgYCrCb32FSplit, iDctImgYCrCb32F);
-    //
-    // Mat iDctImgBGR32F;
-    // YCrCbtoBGR(iDctImgYCrCb32F, iDctImgBGR32F);
-    //
-    // Mat iDctImg;
-    // iDctImgBGR32F.convertTo(iDctImg, CV_8UC3);
-    //
-    // imshow("IDCT", iDctImg);
-	// waitKey(0);
-    //
-    // std::vector<Mat> inputImageSplit;
-    // split(inputImage, inputImageSplit);
-    //
-    // std::vector<Mat> iDctImageSplit;
-    // split(iDctImg, iDctImageSplit);
-    //
-    // std::cout << "EQM : " << eqm(inputImageSplit[0], iDctImageSplit[0]) << '\n';
-    // std::cout << "PSNR : " << psnr(inputImageSplit[0], iDctImageSplit[0]) << '\n';
-
-    // Coeff
-    std::cout << "Compute visualizeDCT" << '\n';
+    
     visualizeDCT(dctImgYCrCb32FSplit);
-    // visualizeDCTHistograms(dctImgYCrCb32FSplit);
 
     // Annulation de coefficients
-    int x = (inputImage.cols / 2);
-    int y = (inputImage.rows / 2);
-    int width = inputImage.cols - x;
-    int height = inputImage.rows - y;
-    Rect mask(x, y, width, height);
-
+    // int x = (inputImage.cols / 2);
+    // int y = (inputImage.rows / 2);
+    // int width = inputImage.cols - x;
+    // int height = inputImage.rows - y;
+    // Rect mask(x, y, width, height);
     // std::vector<Mat> modDctImgYCrCb32FSplit;
     //nullifyCoefficients(dctImgYCrCb32FSplit, modDctImgYCrCb32FSplit, mask);
     // visualizeDCT(modDctImgYCrCb32FSplit);
-
-    std::vector<Mat> modiDctImgYCrCb32FSplit;
-    computeInverseDCT(dctImgYCrCb32FSplit, modiDctImgYCrCb32FSplit);
-
-    // imshow("test", norm_0_255(modiDctImgYCrCb32FSplit[0]));
-
-    // Mat modiDctImgYCrCb32F;
-    // merge(modiDctImgYCrCb32FSplit, modiDctImgYCrCb32F);
-    //
-    // Mat modiDctImgBGR32F;
-    // YCrCbtoBGR(modiDctImgYCrCb32F, modiDctImgBGR32F);
-    //
-    // Mat modiDctImg;
-    // modiDctImgBGR32F.convertTo(modiDctImg, CV_8UC3);
-    //
-    // imshow("modIDCT", modiDctImg);
-    waitKey(0);
 
     return 0;
 }
