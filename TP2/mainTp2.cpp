@@ -256,6 +256,27 @@ void computeDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
 
 }
 
+void computeBlockDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut) {
+    for(int k = 0; k < 3; k++) {
+        Mat res(imgIn[k].size(), CV_32FC1);
+        // imgIn[k].copyTo(res);
+
+        for(int i = 0; i < imgIn[k].rows; i += 8) {
+            for(int j = 0; j < imgIn[k].cols; j += 8) {
+                Rect window(i, j, 8, 8);
+                Mat block = imgIn[k](window);
+
+                Mat dctBlock;
+                dct(block, res(window));
+
+            }
+        }
+
+        imgOut.push_back(res);
+    }
+}
+
+
 void computeInverseDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
 {
     for(int i = 0; i < 3; i++) {
@@ -269,6 +290,7 @@ void computeInverseDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
 
 void nullifyCoefficients(const vector<Mat> & imgIn, vector<Mat> & imgOut, int i = 0)
 {
+    // #TODO mettre un switch et changer le trucs
 
     // int x = (inputImage.cols / 2);
     // int y = (inputImage.rows / 2);
@@ -419,30 +441,30 @@ int main(int argc, char** argv){
     split(imgYCrCb32F, imgYCrCb32FSplit);
 
     // Affichage du canal Y
-    imshow("Canal Y", norm_0_255(imgYCrCb32FSplit[0]));
-    waitKey();
+    // imshow("Canal Y", norm_0_255(imgYCrCb32FSplit[0]));
+    // waitKey();
 
     // Calcul de la DCT
     std::vector<Mat> dctImgYCrCb32FSplit;
     computeDCT(imgYCrCb32FSplit, dctImgYCrCb32FSplit);
 
     // Affichage des coeffs de la DCT
-    visualizeDCT(dctImgYCrCb32FSplit);
+    // visualizeDCT(dctImgYCrCb32FSplit);
 
     // Annulation de coefficients
     std::vector<Mat> modDctImgYCrCb32FSplit;
     nullifyCoefficients(dctImgYCrCb32FSplit, modDctImgYCrCb32FSplit, 1);
 
     // Affichage de la nouvelle DCT
-    visualizeDCT(modDctImgYCrCb32FSplit);
+    // visualizeDCT(modDctImgYCrCb32FSplit);
 
     // Calcul de la DCT inverse
     std::vector<Mat> iModDctImgYCrCb32FSplit;
     computeInverseDCT(modDctImgYCrCb32FSplit, iModDctImgYCrCb32FSplit);
 
     // Affichage du canal Y de la DCT inverse
-    imshow("Canal Y inverse", norm_0_255(iModDctImgYCrCb32FSplit[0]));
-    waitKey();
+    // imshow("Canal Y inverse", norm_0_255(iModDctImgYCrCb32FSplit[0]));
+    // waitKey();
 
     // Fusion des canaux YCrCb
     Mat iModDctImgYCrCb32F;
@@ -457,8 +479,13 @@ int main(int argc, char** argv){
     iModDctImgBGR32F.convertTo(iModDctImg, CV_8UC3);
 
     // Affichage de la DCT inverse
-    imshow("IDCT", iModDctImg);
-	waitKey();
+    // imshow("IDCT", iModDctImg);
+	// waitKey();
+
+    std::vector<Mat> imgBlocDctYCrCb32FSplit;
+    computeBlockDCT(imgYCrCb32FSplit, imgBlocDctYCrCb32FSplit);
+
+    visualizeDCT(imgBlocDctYCrCb32FSplit);
 
     return 0;
 }
