@@ -324,6 +324,49 @@ void applyBlockMask(const vector<Mat> & imgIn, vector<Mat> & imgOut) {
     }
 }
 
+void applyBlockTransform(const vector<Mat> & imgIn, vector<Mat> & imgOut, bool inverse = false) {
+    Mat_<float> m1(8, 8);
+    m1 << 16, 11, 10, 16, 24, 40, 51, 61,
+          12, 12, 14, 19, 26, 58, 60, 55,
+          14, 13, 16, 24, 40, 57, 69, 56,
+          14, 17, 22, 29, 51, 87, 80, 62,
+          18, 22, 37, 56, 68, 109, 103, 77,
+          24, 35, 55, 64, 81, 104, 113, 92,
+          49, 64, 78, 87, 103, 121, 120, 101,
+          72, 92, 95, 98, 112, 100, 103, 99;
+    Mat mask = m1;
+
+    for(int k = 0; k < 3; k++) {
+        Mat res(imgIn[k].size(), CV_32FC1);
+
+        for(int i = 0; i < imgIn[k].rows; i += 8) {
+            for(int j = 0; j < imgIn[k].cols; j += 8) {
+                Rect window(i, j, 8, 8);
+                Mat block = imgIn[k](window);
+
+                for (int i_mask = 0; i_mask < mask.rows; i_mask++) {
+                    for (int j_mask = 0; j_mask < mask.rows; j_mask++) {
+                        if (!inverse) {
+                            res(window).at<float>(i_mask, j_mask) = round(block.at<float>(i_mask, j_mask) / mask.at<float>(i_mask, j_mask));
+                        }
+                        if (inverse) {
+                            res(window).at<float>(i_mask, j_mask) = block.at<float>(i_mask, j_mask) * mask.at<float>(i_mask, j_mask);
+                        }
+                    }
+                }
+            }
+        }
+
+        imgOut.push_back(res);
+    }
+}
+
+void applyInverseBlockTransform(const vector<Mat> & imgIn, vector<Mat> & imgOut)
+{
+    applyBlockTransform(imgIn, imgOut, true);
+}
+
+
 void nullifyCoefficients(const vector<Mat> & imgIn, vector<Mat> & imgOut, int i = 0)
 {
     // #TODO mettre un switch et changer le trucs
@@ -522,14 +565,17 @@ int main(int argc, char** argv){
     computeBlockDCT(imgYCrCb32FSplit, imgBlocDctYCrCb32FSplit);
 
     std::vector<Mat> imgMaskBlocDctYCrCb32FSplit;
-    applyBlockMask(imgBlocDctYCrCb32FSplit, imgMaskBlocDctYCrCb32FSplit);
+    applyBlockTransform(imgBlocDctYCrCb32FSplit, imgMaskBlocDctYCrCb32FSplit);
 
     // Affichage de la DCT bloc
     visualizeDCT(imgMaskBlocDctYCrCb32FSplit);
 
+    std::vector<Mat> invTrans;
+    applyInverseBlockTransform(imgMaskBlocDctYCrCb32FSplit, invTrans);
+
     // Calcul de la DCT bloc inverse
     std::vector<Mat> imgBlocIDctImgYCrCb32FSplit;
-    computeInverseBlockDCT(imgMaskBlocDctYCrCb32FSplit, imgBlocIDctImgYCrCb32FSplit);
+    computeInverseBlockDCT(invTrans, imgBlocIDctImgYCrCb32FSplit);
 
     // Affichage du canal Y de la DCT bloc inverse
     imshow("Canal Y inverse", norm_0_255(imgBlocIDctImgYCrCb32FSplit[0]));
@@ -537,6 +583,21 @@ int main(int argc, char** argv){
 
     std::cout << "EQM : " << eqm(imgYCrCb32FSplit[0], imgBlocIDctImgYCrCb32FSplit[0]) << '\n';
     std::cout << "PSNR : " << psnr(imgYCrCb32FSplit[0], imgBlocIDctImgYCrCb32FSplit[0]) << '\n';
+
+    // Fusion des canaux YCrCb
+    Mat test;
+    merge(imgBlocIDctImgYCrCb32FSplit, test);
+
+    // Conversion de YCrCb vers BGR (float 32 bits)
+    Mat test2;
+    YCrCbtoBGR(test, test2);
+
+    // Conversion en uchar pour l'affichage
+    Mat test3;
+    test2.convertTo(test3, CV_8UC3);
+
+    imshow("IDCT", test3);
+    waitKey();
 
     return 0;
 }
