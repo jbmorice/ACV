@@ -245,29 +245,43 @@ void distortionMap(const vector<Mat> & imgSrc, const vector<Mat> & imgDeg, Mat &
 //=======================================================================================
 // discrete cosine transform
 //=======================================================================================
-void computeDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
+void computeDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut, bool inverse = false)
 {
     for(int i = 0; i < 3; i++) {
-        // Mat dctRes(imgIn[i].size(), CV_32F);
         Mat dctRes;
-        dct(imgIn[i], dctRes);
+
+        if(!inverse) {
+            dct(imgIn[i], dctRes);
+        }
+        if (inverse) {
+            idct(imgIn[i], dctRes);
+        }
+
         imgOut.push_back(dctRes);
     }
 
 }
 
-void computeBlockDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut) {
+void computeInverseDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
+{
+    computeDCT(imgIn, imgOut, true);
+}
+
+void computeBlockDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut, bool inverse = false) {
     for(int k = 0; k < 3; k++) {
         Mat res(imgIn[k].size(), CV_32FC1);
-        // imgIn[k].copyTo(res);
 
         for(int i = 0; i < imgIn[k].rows; i += 8) {
             for(int j = 0; j < imgIn[k].cols; j += 8) {
                 Rect window(i, j, 8, 8);
                 Mat block = imgIn[k](window);
 
-                Mat dctBlock;
-                dct(block, res(window));
+                if(!inverse) {
+                    dct(block, res(window));
+                }
+                if (inverse) {
+                    idct(block, res(window));
+                }
 
             }
         }
@@ -276,16 +290,38 @@ void computeBlockDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut) {
     }
 }
 
-
-void computeInverseDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
+void computeInverseBlockDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
 {
-    for(int i = 0; i < 3; i++) {
-        // Mat iDctRes(imgIn[i].size(), CV_32F);
-        Mat iDctRes;
-        idct(imgIn[i], iDctRes);
-        imgOut.push_back(iDctRes);
-    }
+    computeBlockDCT(imgIn, imgOut, true);
+}
 
+void applyBlockMask(const vector<Mat> & imgIn, vector<Mat> & imgOut) {
+    Mat_<float> m1(8, 8);
+    m1 << 1, 1, 1, 1, 1, 0, 0, 0,
+          1, 1, 1, 1, 0, 0, 0, 0,
+          1, 1, 1, 0, 0, 0, 0, 0,
+          1, 1, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0;
+    Mat mask = m1;
+
+    for(int k = 0; k < 3; k++) {
+        Mat res(imgIn[k].size(), CV_32FC1);
+
+        for(int i = 0; i < imgIn[k].rows; i += 8) {
+            for(int j = 0; j < imgIn[k].cols; j += 8) {
+                Rect window(i, j, 8, 8);
+                Mat block = imgIn[k](window);
+
+                res(window) = block.mul(mask);
+
+            }
+        }
+
+        imgOut.push_back(res);
+    }
 }
 
 void nullifyCoefficients(const vector<Mat> & imgIn, vector<Mat> & imgOut, int i = 0)
@@ -485,7 +521,22 @@ int main(int argc, char** argv){
     std::vector<Mat> imgBlocDctYCrCb32FSplit;
     computeBlockDCT(imgYCrCb32FSplit, imgBlocDctYCrCb32FSplit);
 
-    visualizeDCT(imgBlocDctYCrCb32FSplit);
+    std::vector<Mat> imgMaskBlocDctYCrCb32FSplit;
+    applyBlockMask(imgBlocDctYCrCb32FSplit, imgMaskBlocDctYCrCb32FSplit);
+
+    // Affichage de la DCT bloc
+    visualizeDCT(imgMaskBlocDctYCrCb32FSplit);
+
+    // Calcul de la DCT bloc inverse
+    std::vector<Mat> imgBlocIDctImgYCrCb32FSplit;
+    computeInverseBlockDCT(imgMaskBlocDctYCrCb32FSplit, imgBlocIDctImgYCrCb32FSplit);
+
+    // Affichage du canal Y de la DCT bloc inverse
+    imshow("Canal Y inverse", norm_0_255(imgBlocIDctImgYCrCb32FSplit[0]));
+    waitKey();
+
+    std::cout << "EQM : " << eqm(imgYCrCb32FSplit[0], imgBlocIDctImgYCrCb32FSplit[0]) << '\n';
+    std::cout << "PSNR : " << psnr(imgYCrCb32FSplit[0], imgBlocIDctImgYCrCb32FSplit[0]) << '\n';
 
     return 0;
 }
