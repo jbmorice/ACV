@@ -245,11 +245,18 @@ void distortionMap(const vector<Mat> & imgSrc, const vector<Mat> & imgDeg, Mat &
 //=======================================================================================
 // discrete cosine transform
 //=======================================================================================
-void computeDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
+void computeDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut, bool inverse = false)
 {
     for(int i = 0; i < 3; i++) {
-        Mat dctRes(imgIn[i].size(), CV_32F);
-        dct(imgIn[i], dctRes);
+        Mat dctRes(imgIn[i].size(), CV_32FC1);
+
+        if(!inverse) {
+            dct(imgIn[i], dctRes);
+        }
+        if (inverse) {
+            idct(imgIn[i], dctRes);
+        }
+
         imgOut.push_back(dctRes);
     }
 
@@ -257,33 +264,192 @@ void computeDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
 
 void computeInverseDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
 {
-    for(int i = 0; i < 3; i++) {
-        Mat iDctRes(imgIn[i].size(), CV_32F);
-        idct(imgIn[i], iDctRes);
-        imgOut.push_back(iDctRes);
-    }
+    computeDCT(imgIn, imgOut, true);
+}
 
+void computeBlockDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut, bool inverse = false) {
+    for(int k = 0; k < 3; k++) {
+        Mat res(imgIn[k].size(), CV_32FC1);
+
+        for(int i = 0; i < imgIn[k].rows; i += 8) {
+            for(int j = 0; j < imgIn[k].cols; j += 8) {
+                Rect window(i, j, 8, 8);
+                Mat block = imgIn[k](window);
+
+                if(!inverse) {
+                    dct(block, res(window));
+                }
+                if (inverse) {
+                    idct(block, res(window));
+                }
+
+            }
+        }
+
+        imgOut.push_back(res);
+    }
+}
+
+void computeInverseBlockDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
+{
+    computeBlockDCT(imgIn, imgOut, true);
+}
+
+void applyBlockMask(const vector<Mat> & imgIn, vector<Mat> & imgOut) {
+    Mat_<float> m1(8, 8);
+    m1 << 1, 1, 1, 1, 1, 0, 0, 0,
+          1, 1, 1, 1, 0, 0, 0, 0,
+          1, 1, 1, 0, 0, 0, 0, 0,
+          1, 1, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0;
+    Mat mask = m1;
+
+    for(int k = 0; k < 3; k++) {
+        Mat res(imgIn[k].size(), CV_32FC1);
+
+        for(int i = 0; i < imgIn[k].rows; i += 8) {
+            for(int j = 0; j < imgIn[k].cols; j += 8) {
+                Rect window(i, j, 8, 8);
+                Mat block = imgIn[k](window);
+
+                res(window) = block.mul(mask);
+
+            }
+        }
+
+        imgOut.push_back(res);
+    }
+}
+
+void applyBlockTransform(const vector<Mat> & imgIn, vector<Mat> & imgOut, bool inverse = false) {
+    Mat_<float> m1(8, 8);
+    m1 << 16, 11, 10, 16, 24, 40, 51, 61,
+          12, 12, 14, 19, 26, 58, 60, 55,
+          14, 13, 16, 24, 40, 57, 69, 56,
+          14, 17, 22, 29, 51, 87, 80, 62,
+          18, 22, 37, 56, 68, 109, 103, 77,
+          24, 35, 55, 64, 81, 104, 113, 92,
+          49, 64, 78, 87, 103, 121, 120, 101,
+          72, 92, 95, 98, 112, 100, 103, 99;
+    Mat mask = m1;
+
+    for(int k = 0; k < 3; k++) {
+        Mat res(imgIn[k].size(), CV_32FC1);
+
+        for(int i = 0; i < imgIn[k].rows; i += 8) {
+            for(int j = 0; j < imgIn[k].cols; j += 8) {
+                Rect window(i, j, 8, 8);
+                Mat block = imgIn[k](window);
+
+                for (int i_mask = 0; i_mask < mask.rows; i_mask++) {
+                    for (int j_mask = 0; j_mask < mask.rows; j_mask++) {
+                        if (!inverse) {
+                            res(window).at<float>(i_mask, j_mask) = round(block.at<float>(i_mask, j_mask) / mask.at<float>(i_mask, j_mask));
+                        }
+                        if (inverse) {
+                            res(window).at<float>(i_mask, j_mask) = block.at<float>(i_mask, j_mask) * mask.at<float>(i_mask, j_mask);
+                        }
+                    }
+                }
+            }
+        }
+
+        imgOut.push_back(res);
+    }
+}
+
+void applyInverseBlockTransform(const vector<Mat> & imgIn, vector<Mat> & imgOut)
+{
+    applyBlockTransform(imgIn, imgOut, true);
+}
+
+
+void nullifyCoefficients(const vector<Mat> & imgIn, vector<Mat> & imgOut, int i = 0)
+{
+    // #TODO mettre un switch et changer le trucs
+
+    // int x = (inputImage.cols / 2);
+    // int y = (inputImage.rows / 2);
+    // int width = inputImage.cols - x;
+    // int height = inputImage.rows - y;
+    //
+    // Rect mask(x, y, width, height);
+
+    int x, y, width, height;
+
+    int nbRows = imgIn[0].rows;
+    int nbCols = imgIn[0].cols;
+
+  Rect mask;
+
+  if(i == 0){
+    x = (nbCols/2);
+    y = (nbRows/2);
+    width = nbCols - x;
+    height = nbRows - y;
+
+    std::cout << "X : " << x << " Y : " << y << " Width : " << width << " Height : " << height << std::endl;
+    mask = Rect(x, y, width, height);
+  }
+  else if(i == 1){
+    x = (nbCols/2);
+    y = 0;
+    width = nbCols - x;
+    height = nbRows - y;
+
+    std::cout << "X : " << x << " Y : " << y << " Width : " << width << " Height : " << height << std::endl;
+    mask = Rect(x, y, width, height);
+  }
+  else if(i == 2){
+    x = 0;
+    y = (nbRows/2);
+    width = nbCols - x;
+    height = nbRows - y;
+
+    std::cout << "X : " << x << " Y : " << y << " Width : " << width << " Height : " << height << std::endl;
+    mask = Rect(x, y, width, height);
+  }
+  else if(i == 3){
+    x = 0;
+    y = (nbRows/2);
+    width = (nbCols/2);
+    height = nbRows - y;
+
+    std::cout << "X : " << x << " Y : " << y << " Width : " << width << " Height : " << height << std::endl;
+    mask = Rect(x, y, width, height);
+  }
+
+  for(int k = 0; k < 3; k ++){
+      Mat res;
+      imgIn[k].copyTo(res);
+      res(mask).setTo(0);
+      imgOut.push_back(res);
+}
 }
 
 void visualizeDCT(const vector<Mat> & img)
 {
-    std::vector<Mat> imgIn = img;
     for(int k = 0; k < 3; k++) {
         double maxVal;
-        minMaxLoc(imgIn[k], NULL, &maxVal, NULL, NULL);
+        minMaxLoc(img[k], NULL, &maxVal, NULL, NULL);
 
-        for(int i = 0; i < imgIn[k].rows; i++) {
-            for(int j = 0; j < imgIn[k].cols; j++) {
-                imgIn[k].at<float>(i, j) = log(1 + fabs(imgIn[k].at<float>(i, j))) / log(1 + maxVal) * 255;
+        Mat res(img[k].size(), CV_32FC1);
+
+        for(int i = 0; i < img[k].rows; i++) {
+            for(int j = 0; j < img[k].cols; j++) {
+                res.at<float>(i, j) = log(1 + fabs(img[k].at<float>(i, j))) / log(1 + maxVal) * 255;
             }
         }
 
-        Mat in(imgIn[k].size(), CV_8UC1);
-        imgIn[k].convertTo(in, CV_8UC1);
-        Mat out(imgIn[k].size(), CV_8UC1);
+        Mat in(res.size(), CV_8UC1);
+        res.convertTo(in, CV_8UC1);
+        Mat out(res.size(), CV_8UC1);
         applyColorMap(in, out, COLORMAP_JET);
-        imshow("Coeffs DCT canal " + toString(k) , out);
-        waitKey(0);
+        imshow("DCT", out);
+        waitKey();
 
     }
 
@@ -296,7 +462,6 @@ void visualizeDCTHistograms(vector<Mat> & imgIn) {
         computeHistogram(norm_0_255(imgIn[k]), hist);
         displayHistogram(hist);
 
-        // #TODO les coeffs sont signés, il faudra modifier le calcul de H
         std::cout << "Entropy DCT canal " << toString(k) << " : " << computeEntropy(imgIn[k]) << '\n';
     }
 }
@@ -330,57 +495,200 @@ int main(int argc, char** argv){
 	    return -1;
 	}
 
-	std::cout<< "--------Récupération Image--------" << std::endl;
-
-    Mat inputImage;
-    inputImage = imread(argv[1], CV_LOAD_IMAGE_COLOR);
-    if(!inputImage.data ) { // Check for invalid input
+    Mat src;
+    src = imread(argv[1], CV_LOAD_IMAGE_COLOR);
+    if(!src.data ) { // Check for invalid input
         std::cout <<  "Could not open or find the image " << argv[1] << std::endl;
         waitKey(0); // Wait for a keystroke in the window
-     }
+    }
 
-	std::cout<< "-------- Compute : DCT --------" << std::endl;
+    // Convertion de l'image source de uchar vers float 32 bits
+    Mat floatSrc(src.size(), CV_32FC3);
+    src.convertTo(floatSrc, CV_32FC3);
 
-    Mat img32F(inputImage.size(), CV_32F);
+    // Conversion de BGR float 32 bits vers YCrCb float 32 bits
+    Mat img(src.size(), CV_32FC3);
+    BGRtoYCrCb(floatSrc, img);
 
-    inputImage.convertTo(img32F, CV_32F);
+    // Decomposition des canaux
+    std::vector<Mat> imgVector;
+    split(img, imgVector);
 
-    Mat imgYCrCb32F(img32F.size(), CV_32F);
-    BGRtoYCrCb(img32F, imgYCrCb32F);
+    std::cout<< "-------- TP2 : 2D Discrete Cosine Transform --------" << std::endl;
+    std::cout << "1. DCT and inverse DCT" << std::endl;
+    std::cout << "2. DCT and inverse DCT with nullified coefficients" << std::endl;
+    std::cout << "3. 8x8 block DCT (and inverse)" << std::endl;
+    std::cout << "4. 8x8 block DCT (and inverse) with simple binary mask" << std::endl;
+    std::cout << "5. 8x8 block DCT (and inverse) with JPEG ponderation matrix" << std::endl;
+    std::cout << "Choose an action to perform : ";
 
-    std::vector<Mat> imgYCrCb32FSplit;
-    split(imgYCrCb32F, imgYCrCb32FSplit);
-    std::vector<Mat> dctImgYCrCb32FSplit;
-    computeDCT(imgYCrCb32FSplit, dctImgYCrCb32FSplit);
+    int choice;
+    std::cin >> choice;
 
-    std::vector<Mat> iDctImgYCrCb32FSplit;
-    computeInverseDCT(dctImgYCrCb32FSplit, iDctImgYCrCb32FSplit);
+    switch (choice) {
+        case 1:
+        {
+            std::vector<Mat> dctVector;
+            computeDCT(imgVector, dctVector);
+            visualizeDCT(dctVector);
+            visualizeDCTHistograms(dctVector);
 
-    Mat iDctImgYCrCb32F;
-    merge(iDctImgYCrCb32FSplit, iDctImgYCrCb32F);
+            std::vector<Mat> idctVector;
+            computeInverseDCT(dctVector, idctVector);
 
-    Mat iDctImgBGR32F;
-    YCrCbtoBGR(iDctImgYCrCb32F, iDctImgBGR32F);
+            std::cout << "EQM : " << eqm(imgVector[0], idctVector[0]) << std::endl;
+            std::cout << "PSNR : " << psnr(imgVector[0], idctVector[0]) << std::endl;
 
-    Mat iDctImg;
-    iDctImgBGR32F.convertTo(iDctImg, CV_8UC3);
+            Mat finalImg;
+            merge(idctVector, finalImg);
+            YCrCbtoBGR(finalImg, finalImg);
+            finalImg.convertTo(finalImg, CV_8UC3);
+            imshow("IDCT", finalImg);
+            waitKey();
 
-    // imshow("IDCT", iDctImg);
-	// waitKey(0);
+            dctVector.clear();
+            idctVector.clear();
+            finalImg.release();
 
-    std::vector<Mat> inputImageSplit;
-    split(inputImage, inputImageSplit);
+            break;
+        }
 
-    std::vector<Mat> iDctImageSplit;
-    split(iDctImg, iDctImageSplit);
+        case 2:
+        {
+            std::vector<Mat> dctVector;
+            computeDCT(imgVector, dctVector);
 
-    std::cout << "EQM : " << eqm(inputImageSplit[0], iDctImageSplit[0]) << '\n';
-    std::cout << "PSNR : " << psnr(inputImageSplit[0], iDctImageSplit[0]) << '\n';
+            std::cout << "Which mask do you want to use ?" << std::endl;
+            std::cout << "1. Bottom right hand corner" << std::endl;
+            std::cout << "2. Right half" << std::endl;
+            std::cout << "3. Bottom half" << std::endl;
+            std::cout << "4. Bottom left hand corner" << std::endl;
 
-    // Coeff
-    std::cout << "Compute visualizeDCT" << '\n';
-    visualizeDCT(dctImgYCrCb32FSplit);
-    visualizeDCTHistograms(dctImgYCrCb32FSplit);
+            int maskIndex;
+            std::cin >> maskIndex;
+
+            std::vector<Mat> modDdctVector;
+            nullifyCoefficients(dctVector, modDdctVector, maskIndex);
+
+            visualizeDCT(modDdctVector);
+            visualizeDCTHistograms(modDdctVector);
+
+            std::vector<Mat> idctVector;
+            computeInverseDCT(modDdctVector, idctVector);
+
+            std::cout << "EQM : " << eqm(imgVector[0], idctVector[0]) << std::endl;
+            std::cout << "PSNR : " << psnr(imgVector[0], idctVector[0]) << std::endl;
+
+            Mat finalImg;
+            merge(idctVector, finalImg);
+            YCrCbtoBGR(finalImg, finalImg);
+            finalImg.convertTo(finalImg, CV_8UC3);
+            imshow("IDCT", finalImg);
+            waitKey();
+
+            dctVector.clear();
+            idctVector.clear();
+            finalImg.release();
+
+            break;
+        }
+
+        case 3:
+        {
+            std::vector<Mat> dctVector;
+            computeBlockDCT(imgVector, dctVector);
+            visualizeDCT(dctVector);
+            visualizeDCTHistograms(dctVector);
+
+            std::vector<Mat> idctVector;
+            computeInverseBlockDCT(dctVector, idctVector);
+
+            std::cout << "EQM : " << eqm(imgVector[0], idctVector[0]) << std::endl;
+            std::cout << "PSNR : " << psnr(imgVector[0], idctVector[0]) << std::endl;
+
+            Mat finalImg;
+            merge(idctVector, finalImg);
+            YCrCbtoBGR(finalImg, finalImg);
+            finalImg.convertTo(finalImg, CV_8UC3);
+            imshow("IDCT", finalImg);
+            waitKey();
+
+            dctVector.clear();
+            idctVector.clear();
+            finalImg.release();
+
+            break;
+        }
+
+        case 4:
+        {
+            std::vector<Mat> dctVector;
+            computeBlockDCT(imgVector, dctVector);
+
+            std::vector<Mat> modDdctVector;
+            applyBlockMask(dctVector, modDdctVector);
+
+            visualizeDCT(modDdctVector);
+            visualizeDCTHistograms(modDdctVector);
+
+            std::vector<Mat> idctVector;
+            computeInverseBlockDCT(modDdctVector, idctVector);
+
+            std::cout << "EQM : " << eqm(imgVector[0], idctVector[0]) << std::endl;
+            std::cout << "PSNR : " << psnr(imgVector[0], idctVector[0]) << std::endl;
+
+            Mat finalImg;
+            merge(idctVector, finalImg);
+            YCrCbtoBGR(finalImg, finalImg);
+            finalImg.convertTo(finalImg, CV_8UC3);
+            imshow("IDCT", finalImg);
+            waitKey();
+
+            dctVector.clear();
+            idctVector.clear();
+            finalImg.release();
+
+            break;
+        }
+
+        case 5:
+        {
+            std::vector<Mat> dctVector;
+            computeBlockDCT(imgVector, dctVector);
+
+            std::vector<Mat> modDdctVector;
+            applyBlockTransform(dctVector, modDdctVector);
+
+            visualizeDCT(modDdctVector);
+            visualizeDCTHistograms(modDdctVector);
+
+            std::vector<Mat> iModDdctVector;
+            applyInverseBlockTransform(modDdctVector, iModDdctVector);
+
+            std::vector<Mat> idctVector;
+            computeInverseBlockDCT(iModDdctVector, idctVector);
+
+            std::cout << "EQM : " << eqm(imgVector[0], idctVector[0]) << std::endl;
+            std::cout << "PSNR : " << psnr(imgVector[0], idctVector[0]) << std::endl;
+
+            Mat finalImg;
+            merge(idctVector, finalImg);
+            YCrCbtoBGR(finalImg, finalImg);
+            finalImg.convertTo(finalImg, CV_8UC3);
+            imshow("IDCT", finalImg);
+            waitKey();
+
+            dctVector.clear();
+            idctVector.clear();
+            finalImg.release();
+
+            break;
+        }
+
+        default:
+            std::cout << "This is not a valid action. Please try again." << std::endl;
+            break;
+    }
 
     return 0;
 }
