@@ -248,7 +248,7 @@ void distortionMap(const vector<Mat> & imgSrc, const vector<Mat> & imgDeg, Mat &
 void computeDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut, bool inverse = false)
 {
     for(int i = 0; i < 3; i++) {
-        Mat dctRes;
+        Mat dctRes(imgIn[i].size(), CV_32FC1);
 
         if(!inverse) {
             dct(imgIn[i], dctRes);
@@ -462,7 +462,6 @@ void visualizeDCTHistograms(vector<Mat> & imgIn) {
         computeHistogram(norm_0_255(imgIn[k]), hist);
         displayHistogram(hist);
 
-        // #TODO les coeffs sont signés, il faudra modifier le calcul de H
         std::cout << "Entropy DCT canal " << toString(k) << " : " << computeEntropy(imgIn[k]) << '\n';
     }
 }
@@ -496,108 +495,200 @@ int main(int argc, char** argv){
 	    return -1;
 	}
 
-	std::cout<< "--------Récupération Image--------" << std::endl;
-
-    Mat inputImage;
-    inputImage = imread(argv[1], CV_LOAD_IMAGE_COLOR);
-    if(!inputImage.data ) { // Check for invalid input
+    Mat src;
+    src = imread(argv[1], CV_LOAD_IMAGE_COLOR);
+    if(!src.data ) { // Check for invalid input
         std::cout <<  "Could not open or find the image " << argv[1] << std::endl;
         waitKey(0); // Wait for a keystroke in the window
-     }
-
-	std::cout<< "-------- Compute : DCT --------" << std::endl;
+    }
 
     // Convertion de l'image source de uchar vers float 32 bits
-    Mat img32F(inputImage.size(), CV_32F);
-    inputImage.convertTo(img32F, CV_32F);
+    Mat floatSrc(src.size(), CV_32FC3);
+    src.convertTo(floatSrc, CV_32FC3);
 
     // Conversion de BGR float 32 bits vers YCrCb float 32 bits
-    Mat imgYCrCb32F(img32F.size(), CV_32F);
-    BGRtoYCrCb(img32F, imgYCrCb32F);
+    Mat img(src.size(), CV_32FC3);
+    BGRtoYCrCb(floatSrc, img);
 
     // Decomposition des canaux
-    std::vector<Mat> imgYCrCb32FSplit;
-    split(imgYCrCb32F, imgYCrCb32FSplit);
+    std::vector<Mat> imgVector;
+    split(img, imgVector);
 
-    // Affichage du canal Y
-    // imshow("Canal Y", norm_0_255(imgYCrCb32FSplit[0]));
-    // waitKey();
+    std::cout<< "-------- TP2 : 2D Discrete Cosine Transform --------" << std::endl;
+    std::cout << "1. DCT and inverse DCT" << std::endl;
+    std::cout << "2. DCT and inverse DCT with nullified coefficients" << std::endl;
+    std::cout << "3. 8x8 block DCT (and inverse)" << std::endl;
+    std::cout << "4. 8x8 block DCT (and inverse) with simple binary mask" << std::endl;
+    std::cout << "5. 8x8 block DCT (and inverse) with JPEG ponderation matrix" << std::endl;
+    std::cout << "Choose an action to perform : ";
 
-    // Calcul de la DCT
-    std::vector<Mat> dctImgYCrCb32FSplit;
-    computeDCT(imgYCrCb32FSplit, dctImgYCrCb32FSplit);
+    int choice;
+    std::cin >> choice;
 
-    // Affichage des coeffs de la DCT
-    // visualizeDCT(dctImgYCrCb32FSplit);
+    switch (choice) {
+        case 1:
+        {
+            std::vector<Mat> dctVector;
+            computeDCT(imgVector, dctVector);
+            visualizeDCT(dctVector);
+            visualizeDCTHistograms(dctVector);
 
-    // Annulation de coefficients
-    std::vector<Mat> modDctImgYCrCb32FSplit;
-    nullifyCoefficients(dctImgYCrCb32FSplit, modDctImgYCrCb32FSplit, 1);
+            std::vector<Mat> idctVector;
+            computeInverseDCT(dctVector, idctVector);
 
-    // Affichage de la nouvelle DCT
-    // visualizeDCT(modDctImgYCrCb32FSplit);
+            std::cout << "EQM : " << eqm(imgVector[0], idctVector[0]) << std::endl;
+            std::cout << "PSNR : " << psnr(imgVector[0], idctVector[0]) << std::endl;
 
-    // Calcul de la DCT inverse
-    std::vector<Mat> iModDctImgYCrCb32FSplit;
-    computeInverseDCT(modDctImgYCrCb32FSplit, iModDctImgYCrCb32FSplit);
+            Mat finalImg;
+            merge(idctVector, finalImg);
+            YCrCbtoBGR(finalImg, finalImg);
+            finalImg.convertTo(finalImg, CV_8UC3);
+            imshow("IDCT", finalImg);
+            waitKey();
 
-    // Affichage du canal Y de la DCT inverse
-    // imshow("Canal Y inverse", norm_0_255(iModDctImgYCrCb32FSplit[0]));
-    // waitKey();
+            dctVector.clear();
+            idctVector.clear();
+            finalImg.release();
 
-    // Fusion des canaux YCrCb
-    Mat iModDctImgYCrCb32F;
-    merge(iModDctImgYCrCb32FSplit, iModDctImgYCrCb32F);
+            break;
+        }
 
-    // Conversion de YCrCb vers BGR (float 32 bits)
-    Mat iModDctImgBGR32F;
-    YCrCbtoBGR(iModDctImgYCrCb32F, iModDctImgBGR32F);
+        case 2:
+        {
+            std::vector<Mat> dctVector;
+            computeDCT(imgVector, dctVector);
 
-    // Conversion en uchar pour l'affichage
-    Mat iModDctImg;
-    iModDctImgBGR32F.convertTo(iModDctImg, CV_8UC3);
+            std::cout << "Which mask do you want to use ?" << std::endl;
+            std::cout << "1. Bottom right hand corner" << std::endl;
+            std::cout << "2. Right half" << std::endl;
+            std::cout << "3. Bottom half" << std::endl;
+            std::cout << "4. Bottom left hand corner" << std::endl;
 
-    // Affichage de la DCT inverse
-    // imshow("IDCT", iModDctImg);
-	// waitKey();
+            int maskIndex;
+            std::cin >> maskIndex;
 
-    std::vector<Mat> imgBlocDctYCrCb32FSplit;
-    computeBlockDCT(imgYCrCb32FSplit, imgBlocDctYCrCb32FSplit);
+            std::vector<Mat> modDdctVector;
+            nullifyCoefficients(dctVector, modDdctVector, maskIndex);
 
-    std::vector<Mat> imgMaskBlocDctYCrCb32FSplit;
-    applyBlockTransform(imgBlocDctYCrCb32FSplit, imgMaskBlocDctYCrCb32FSplit);
+            visualizeDCT(modDdctVector);
+            visualizeDCTHistograms(modDdctVector);
 
-    // Affichage de la DCT bloc
-    visualizeDCT(imgMaskBlocDctYCrCb32FSplit);
+            std::vector<Mat> idctVector;
+            computeInverseDCT(modDdctVector, idctVector);
 
-    std::vector<Mat> invTrans;
-    applyInverseBlockTransform(imgMaskBlocDctYCrCb32FSplit, invTrans);
+            std::cout << "EQM : " << eqm(imgVector[0], idctVector[0]) << std::endl;
+            std::cout << "PSNR : " << psnr(imgVector[0], idctVector[0]) << std::endl;
 
-    // Calcul de la DCT bloc inverse
-    std::vector<Mat> imgBlocIDctImgYCrCb32FSplit;
-    computeInverseBlockDCT(invTrans, imgBlocIDctImgYCrCb32FSplit);
+            Mat finalImg;
+            merge(idctVector, finalImg);
+            YCrCbtoBGR(finalImg, finalImg);
+            finalImg.convertTo(finalImg, CV_8UC3);
+            imshow("IDCT", finalImg);
+            waitKey();
 
-    // Affichage du canal Y de la DCT bloc inverse
-    imshow("Canal Y inverse", norm_0_255(imgBlocIDctImgYCrCb32FSplit[0]));
-    waitKey();
+            dctVector.clear();
+            idctVector.clear();
+            finalImg.release();
 
-    std::cout << "EQM : " << eqm(imgYCrCb32FSplit[0], imgBlocIDctImgYCrCb32FSplit[0]) << '\n';
-    std::cout << "PSNR : " << psnr(imgYCrCb32FSplit[0], imgBlocIDctImgYCrCb32FSplit[0]) << '\n';
+            break;
+        }
 
-    // Fusion des canaux YCrCb
-    Mat test;
-    merge(imgBlocIDctImgYCrCb32FSplit, test);
+        case 3:
+        {
+            std::vector<Mat> dctVector;
+            computeBlockDCT(imgVector, dctVector);
+            visualizeDCT(dctVector);
+            visualizeDCTHistograms(dctVector);
 
-    // Conversion de YCrCb vers BGR (float 32 bits)
-    Mat test2;
-    YCrCbtoBGR(test, test2);
+            std::vector<Mat> idctVector;
+            computeInverseBlockDCT(dctVector, idctVector);
 
-    // Conversion en uchar pour l'affichage
-    Mat test3;
-    test2.convertTo(test3, CV_8UC3);
+            std::cout << "EQM : " << eqm(imgVector[0], idctVector[0]) << std::endl;
+            std::cout << "PSNR : " << psnr(imgVector[0], idctVector[0]) << std::endl;
 
-    imshow("IDCT", test3);
-    waitKey();
+            Mat finalImg;
+            merge(idctVector, finalImg);
+            YCrCbtoBGR(finalImg, finalImg);
+            finalImg.convertTo(finalImg, CV_8UC3);
+            imshow("IDCT", finalImg);
+            waitKey();
+
+            dctVector.clear();
+            idctVector.clear();
+            finalImg.release();
+
+            break;
+        }
+
+        case 4:
+        {
+            std::vector<Mat> dctVector;
+            computeBlockDCT(imgVector, dctVector);
+
+            std::vector<Mat> modDdctVector;
+            applyBlockMask(dctVector, modDdctVector);
+
+            visualizeDCT(modDdctVector);
+            visualizeDCTHistograms(modDdctVector);
+
+            std::vector<Mat> idctVector;
+            computeInverseBlockDCT(modDdctVector, idctVector);
+
+            std::cout << "EQM : " << eqm(imgVector[0], idctVector[0]) << std::endl;
+            std::cout << "PSNR : " << psnr(imgVector[0], idctVector[0]) << std::endl;
+
+            Mat finalImg;
+            merge(idctVector, finalImg);
+            YCrCbtoBGR(finalImg, finalImg);
+            finalImg.convertTo(finalImg, CV_8UC3);
+            imshow("IDCT", finalImg);
+            waitKey();
+
+            dctVector.clear();
+            idctVector.clear();
+            finalImg.release();
+
+            break;
+        }
+
+        case 5:
+        {
+            std::vector<Mat> dctVector;
+            computeBlockDCT(imgVector, dctVector);
+
+            std::vector<Mat> modDdctVector;
+            applyBlockTransform(dctVector, modDdctVector);
+
+            visualizeDCT(modDdctVector);
+            visualizeDCTHistograms(modDdctVector);
+
+            std::vector<Mat> iModDdctVector;
+            applyInverseBlockTransform(modDdctVector, iModDdctVector);
+
+            std::vector<Mat> idctVector;
+            computeInverseBlockDCT(iModDdctVector, idctVector);
+
+            std::cout << "EQM : " << eqm(imgVector[0], idctVector[0]) << std::endl;
+            std::cout << "PSNR : " << psnr(imgVector[0], idctVector[0]) << std::endl;
+
+            Mat finalImg;
+            merge(idctVector, finalImg);
+            YCrCbtoBGR(finalImg, finalImg);
+            finalImg.convertTo(finalImg, CV_8UC3);
+            imshow("IDCT", finalImg);
+            waitKey();
+
+            dctVector.clear();
+            idctVector.clear();
+            finalImg.release();
+
+            break;
+        }
+
+        default:
+            std::cout << "This is not a valid action. Please try again." << std::endl;
+            break;
+    }
 
     return 0;
 }
