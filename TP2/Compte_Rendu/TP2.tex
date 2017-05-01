@@ -1,0 +1,106 @@
+\documentclass[12pt]{report}
+
+%Vous souciez pas de tout les packages, j'ai oublié ce que fait la moitié d'entre eux
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[francais]{babel}
+%\usepackage{layout}
+\usepackage[left=3cm,right=3cm,top=3cm,bottom=3cm]{geometry}
+%\usepackage{setspace}
+\usepackage{soul}
+\usepackage[normalem]{ulem}
+%\usepackage{eurosym}
+%\usepackage{bookman}
+%\usepackage{charter}
+%\usepackage{newcent}
+%\usepackage{lmodern}
+%\usepackage{mathpazo}
+%\usepackage{mathptmx}
+%\usepackage{url}
+%\usepackage{verbatim}
+%\usepackage{moreverb}
+%\usepackage{listings}
+%\usepackage{fancyhdr}
+%\usepackage{wrapfig}
+\usepackage{color}
+%\usepackage{colortbl}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+%\usepackage{asmthm}
+%\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{tgtermes}
+\usepackage{titlesec}
+\usepackage[final]{pdfpages} 
+\usepackage{epsfig}
+\usepackage{comment}
+\usepackage{float}
+\usepackage{amsmath}
+\renewcommand{\emph}{\textit}
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+\titleformat*{\subsection}{\bfseries}
+\parskip=5pt
+
+%Information pour la page de garde
+
+\title{TP 2 - La transformée en cosinus discrète 2D}
+\author{Guillaume \bsc{Versal}, Jean-Baptiste \bsc{Morice}}
+\date{\today}
+
+
+\begin{document}
+
+
+
+%Commande qui crée la page de garde
+\maketitle
+
+\tableofcontents
+
+\newpage
+\section*{Introduction}
+
+Ce TP a pour objectif :
+\begin{itemize}
+\item la prise en main de la transformée en cosinus discrète 2D sur des images naturelles ;
+\item l'implémentation d'une transformée par bloc 8x8.\\
+\end{itemize}
+Pour ce TP nous disposions d'une image de base représentant un bateau amaré dans un port. Cette image est intéressante pour observer les effets de la transformée en cosinus car elle présente des détails fins au niveau de la mâture du bateau sur lesquels les éventuels artefacts de compression seront plus visibles.
+
+
+\newpage
+\section{Notre travail}
+
+\subsection{Questions 2.1 et 2.2}
+
+
+
+\section{Conclusion}
+
+
+\begin{comment}
+
+%Commande pour le sommaire
+
+\renewcommand{\contentsname}{\large Sommaire} % Change le nom en sommaire
+\setcounter{tocdepth}{2} % Défini la profondeur d'une table des matières
+\tableofcontents
+\newpage
+
+\end{comment}
+
+\newpage
+
+
+%Commande pour le sommaire des figures
+
+\renewcommand*\listfigurename{\large Liste des figures}
+\listoffigures
+\newpage
+
+
+\end{document}
