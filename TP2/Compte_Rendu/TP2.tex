@@ -76,7 +76,7 @@ Pour ce TP nous disposions d'une image de base, "boats.pgm", représentant des b
 \section{Notre travail}
 
 \subsection{DCT et DCT inverse}
-Dans un premier temps nous devions mettre en place un programme qui convertit une image encodée sur trois canaux en BGR vers YCrCb, puis qui appliquer la DCT sur chacune de ces composantes. Pour vérifier la réversibilité du processus nous devions appliquer la DCT inverse sur le résultat obtenu et comparer l'EQM et le PSNR de l'image finale obtenue et de l'image originale.\\
+Dans un premier temps nous devions mettre en place un programme qui convertit une image encodée sur trois canaux en BGR vers YCrCb, puis qui appliquer la DCT sur chacune de ses composantes. Pour vérifier la réversibilité du processus nous devions appliquer la DCT inverse sur le résultat obtenu et comparer l'EQM et le PSNR de l'image finale obtenue et de l'image originale.\\
 
 L'image originale suivante :
 
@@ -102,10 +102,8 @@ Dont les histgorammes des canaux YCrCb sont :
 \begin{itemize}
 \item Entropie canal Y : 6.64908
 \item Entropie canal Cr : 4.61065
-\item Entropie canal Cb : 4.87461
+\item Entropie canal Cb : 4.87461\\
 \end{itemize}
-
-Donne donc le résultat suivant :
 
 %Image originale
 \begin{figure}[H]
@@ -118,7 +116,7 @@ Donne donc le résultat suivant :
 L'EQM entre ces deux images vaut 0 et le PSNR est infini, ce qui confirme le bon fonctionnement de la transformée et de la transformée inverse.
 
 \subsection{Répartition des coefficients DCT}
-Dans un second temps nous souhaitions visualiser ces coefficients. Pour les rendre visuellement interprétables nous leur avons appliqué un compression logarithmique ainsi qu'une color map.\\
+Dans un second temps nous souhaitions visualiser ces coefficients. Pour les rendre visuellement interprétables nous leur avons appliqué une compression logarithmique ainsi qu'une color map marquant les valeurs d'un dégradé rouge, pour les valeurs les plus hautes, vers bleu, pour les valeurs les plus basses.\\
 
 Pour l'image "boats.pgm" nous obtenons les résultats suivants :
 
@@ -131,6 +129,8 @@ Pour l'image "boats.pgm" nous obtenons les résultats suivants :
 \end{center}
 \end{figure}
 
+On remarque que les valeurs les plus hautes sont concentrées dans le coin supérieur gauche du spectre, ce qui correspond aux basses fréquences, et que les valeurs plus basses sont réparties sur le reste du spectre, correspondant aux hautes fréquences.
+
 Observons les histogrammes de ces images :
 
 \begin{figure}[H]
@@ -142,11 +142,21 @@ Observons les histogrammes de ces images :
 \end{center}
 \end{figure}
 
-Les valeurs des coefficients DCT du canal Y ont pour entropie 4.56095, ceux du canal Cr 2.54804, et ceux du canal Cb 2.79877.
+\begin{itemize}
+\item Entropie canal Y : 4.56095
+\item Entropie canal Cr : 2.54804
+\item Entropie canal Cb : 2.79877\\
+\end{itemize}
 
-Comparer les histogrammes 
+En les comparant à ceux de l'image d'origine on remarque que leur dynamique est beaucoup plus faible. Les valeurs sont centrées autour d'un pic et s'en éliognent très peu. On observe également que l'entropie à baissé de presque deux points pour chaque histogramme ce qui confirme la "réorganisation" des valeurs après la transformation en cosinus et met en évidence la diminutaion de la quantité d'information.
+
+Nous sommes donc bien en présence d'une compression sans perte de l'information, comme nous le montraient les valeurs d'EQM et de PSNR entre l'image source et le résultat de la transformée inverse.
 
 \subsection{Influence des coefficients DCT sur la qualité de l'image}
+
+Ensuite nous avons cherché à mettre en évidence l'influence des coefficients de la DCT. Pour ce faire nous décidé d'annuler différentes portions des spectres grace à des masques afin d'examiner les effets sur l'image reconstituée.
+
+Voici les résultats que nous avons obtenus.
 
 \subsubsection{Premier masquage : coin bas droit}
 
@@ -171,7 +181,7 @@ Comparer les histogrammes
 \begin{itemize}
 \item Entropie canal Y : 4.26638
 \item Entropie canal Cr : 2.40643
-\item Entropie canal Cb : 2.63162
+\item Entropie canal Cb : 2.63162\\
 \end{itemize}
 
 \begin{figure}[H]
@@ -211,7 +221,7 @@ Comparer les histogrammes
 \begin{itemize}
 \item Entropie canal Y : 3.41211
 \item Entropie canal Cr : 2.03295
-\item Entropie canal Cb : 2.25182
+\item Entropie canal Cb : 2.25182\\
 \end{itemize}
 
 \begin{figure}[H]
@@ -250,7 +260,7 @@ Comparer les histogrammes
 \begin{itemize}
 \item Entropie canal Y : 3.40015
 \item Entropie canal Cr : 2.04095
-\item Entropie canal Cb : 2.13661
+\item Entropie canal Cb : 2.13661\\
 \end{itemize}
 
 \begin{figure}[H]
@@ -289,7 +299,7 @@ Comparer les histogrammes
 \begin{itemize}
 \item Entropie canal Y : 3.98762
 \item Entropie canal Cr : 2.28932
-\item Entropie canal Cb : 2.44441
+\item Entropie canal Cb : 2.44441\\
 \end{itemize}
 
 \begin{figure}[H]
@@ -305,12 +315,23 @@ Comparer les histogrammes
 \item PSNR : 34.2322
 \end{itemize}
 
-\subsubsection{Interprétations}
-Expliquer les résultats observés.
-Sommes nous dans un contexte de transformation globale ?
+\subsubsection{Observations et interprétations}
+Pour le masquage du coin inférieur droit on remarque peu de modifications. Les valeurs d'entropie des histogrammes sont similaires à celles avant le masquage, l'EQM est plutôt faible et le PSNR aux alentours de 40 reste une valeur acceptable pour une compression avec perte. On ne distingue pas de distortions particulièrement visibles sur la carte.
+
+Avec le masquage de la moitié droite du spectre on remarque une montée de l'EQM à 25 et une baisse du PSNR à 34. De plus on peut observer sur la carte de distortion des artefacts, du ringing, autour des composantes verticales de l'image.
+
+Même constat avec le  masquage de la moitié basse du spectre, mais cette fois ci le ringing s'observe autour des composantes verticales de l'image resconstituée. Et l'EQM attteint la valeur maximale que nous observerons, soit 28. 
+
+Le masquage du coin bas gauche produit le même type d'artefacts que pour la moitié basse mais les valeurs d'EQM et de PSNR sont plus proches de celle après le masquage de la moitié droite.
+
+On peut donc en conclure que la partie droite du spectre contient les fréquences des composantes verticales de l'image d'origine, et que le partie basse contient les fréquences des composantes verticales.
+
+Il est possible de supprimer une grande quantité de ces fréquences sans affecter la perception visuelle de l'image compréssée mais si l'on en supprime trop on voit apparaître un effet de ringing autour de certaines composantes de l'image et les valeurs de PSNR deviennent difficilement acceptables.\\
+
+Nous sommes bien dans un contexte de transformation globale puisque la transformée en cosinus implique une perte la spatialité dans la représentation des coefficients et agir sur ces coefficients, qui sont en réalité des fréquences de l'image d'origine, comme nous venons de le faire peut avoir une répercussion sur différents endroits de l'image reconstituée.
 
 \subsection{Etude de la DCT appliquée par bloc 8x8}
-Nous avons commencé par mettre en place la DCT par bloc 8x8 et la DCT inverse. Nous observons les résultats suivant :
+Nous avons ensuite dû mettre en place la DCT par bloc 8x8 et son inverse. Avec notre algorithme nous observons les résultats suivant :
 
 \begin{figure}[H]
 \begin{center}
@@ -333,7 +354,7 @@ Nous avons commencé par mettre en place la DCT par bloc 8x8 et la DCT inverse. 
 \begin{itemize}
 \item Entropie canal Y : 3.7306
 \item Entropie canal Cr : 2.38546
-\item Entropie canal Cb : 2.63086
+\item Entropie canal Cb : 2.63086\\
 \end{itemize}
 
 \begin{figure}[H]
@@ -345,12 +366,14 @@ Nous avons commencé par mettre en place la DCT par bloc 8x8 et la DCT inverse. 
 
 \begin{itemize}
 \item EQM : 0
-\item PSNR : inf
+\item PSNR : infini\\
 \end{itemize}
 
-Ces résultats confirment le bon fonctionnement de notre transformée.
+Ces résultats confirment donc le bon fonctionnement de notre transformée. A noter que pour chaque canal on observe une entropie plus basse que pour la transformée en cosinus classique, ce qui suggère une meilleure compression de l'information par cette technique, et toujours sans perte.
 
 \subsubsection{Annulation de coefficients de la DCT par bloc 8x8}
+
+Le filtre que nous appliquons permet de conserver les valeurs situées dans le coin supérieur gauche du spectre, soit les basses fréquences qui sont le plus présentes et contiennent le plus d'information, de chaque bloc.
 
 \begin{figure}[H]
 \begin{center}
@@ -373,8 +396,10 @@ Ces résultats confirment le bon fonctionnement de notre transformée.
 \begin{itemize}
 \item Entropie canal Y : 1.62577
 \item Entropie canal Cr : 1.30891
-\item Entropie canal Cb : 1.36591
+\item Entropie canal Cb : 1.36591\\
 \end{itemize}
+
+On observe une baisse de l'entropie.
 
 \begin{figure}[H]
 \begin{center}
@@ -386,10 +411,14 @@ Ces résultats confirment le bon fonctionnement de notre transformée.
 
 \begin{itemize}
 \item EQM : 49.7125
-\item PSNR : 31.1661
+\item PSNR : 31.1661\\
 \end{itemize}
 
+Cette baisse s'accompagne d'une très grande EQM et d'un PSNR à 30, soit à la limite de l'acceptable. Néanmoins l'image reconstituée ne paraît pas présenter d'artefacts importants comme avec le masquage sur la transformée classique. On en remarque tout de même un petit peu partout sur la carte de distortion mais cela n'impacte pas véritablement la perception de l'image finale.\\
+
 \subsubsection{Application d'une transformation aux coefficients de la DCT par bloc 8x8}
+
+La transformation que nous appliquons ici est celle de la norme JPEG.
 
 \begin{figure}[H]
 \begin{center}
@@ -412,8 +441,10 @@ Ces résultats confirment le bon fonctionnement de notre transformée.
 \begin{itemize}
 \item Entropie canal Y : 0.995572
 \item Entropie canal Cr : 0.380482
-\item Entropie canal Cb : 0.422024
+\item Entropie canal Cb : 0.422024\\
 \end{itemize}
+
+On constate une baisse encore plus forte de l'entropie qu'avec le masquage précendent.
 
 \begin{figure}[H]
 \begin{center}
@@ -425,11 +456,14 @@ Ces résultats confirment le bon fonctionnement de notre transformée.
 
 \begin{itemize}
 \item EQM : 43.8357
-\item PSNR : 31.7125
+\item PSNR : 31.7125\\
 \end{itemize}
+
+On observe également une EQM record et un PSNR similaire aux résultats précendants. De plus, la carte de distortion montre des artefacts légers présents sur toute l'image sous la forme d'un fin bruit. Néanmoins ces artefacts entravent moins la perception de l'image que le masquage, nous sommes donc en présence d'une technique de compression avec pertes performante.
 
 \section{Conclusion}
 
+Cette étude de la transformée en cosinus discrète 2D nous a permis d'observer différents mécanismes de compression impliqués dans la norme d'encodage JPEG, et ainsi, de mieux appréhender ce qui la rend si performante.
 
 \begin{comment}
 
