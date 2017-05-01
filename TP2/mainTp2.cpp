@@ -7,23 +7,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/contrib/contrib.hpp>
 
-// MACRO pour avoir le nom d'une variable.
-#define getName(var) #var
-
 using namespace cv;
-
-
-//=======================================================================================
-// convert int into string
-//=======================================================================================
-
-string toString(int i) // convert int to string
-{
-    std::stringstream value;
-    value << i;
-    return value.str();
-}
-
 
 //=======================================================================================
 // nombre d'échantillon d'un histogramme en Mat
@@ -262,111 +246,68 @@ void computeDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut, bool inverse = 
 
 }
 
+//=======================================================================================
+// inverse discrete cosine transform
+//=======================================================================================
 void computeInverseDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
 {
     computeDCT(imgIn, imgOut, true);
 }
 
-void computeBlockDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut, bool inverse = false) {
-    for(int k = 0; k < 3; k++) {
-        Mat res(imgIn[k].size(), CV_32FC1);
-
-        for(int i = 0; i < imgIn[k].rows; i += 8) {
-            for(int j = 0; j < imgIn[k].cols; j += 8) {
-                Rect window(i, j, 8, 8);
-                Mat block = imgIn[k](window);
-
-                if(!inverse) {
-                    dct(block, res(window));
-                }
-                if (inverse) {
-                    idct(block, res(window));
-                }
-
-            }
-        }
-
-        imgOut.push_back(res);
-    }
-}
-
-void computeInverseBlockDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
+//=======================================================================================
+// convert a matrix of dct coeficients to a visualizable image
+//=======================================================================================
+Mat visualizeDCT(const Mat & img)
 {
-    computeBlockDCT(imgIn, imgOut, true);
-}
+    double maxVal;
+    minMaxLoc(img, NULL, &maxVal, NULL, NULL);
 
-void applyBlockMask(const vector<Mat> & imgIn, vector<Mat> & imgOut) {
-    Mat_<float> m1(8, 8);
-    m1 << 1, 1, 1, 1, 1, 0, 0, 0,
-          1, 1, 1, 1, 0, 0, 0, 0,
-          1, 1, 1, 0, 0, 0, 0, 0,
-          1, 1, 0, 0, 0, 0, 0, 0,
-          1, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 0, 0;
-    Mat mask = m1;
+    Mat res(img.size(), CV_32FC1);
 
-    for(int k = 0; k < 3; k++) {
-        Mat res(imgIn[k].size(), CV_32FC1);
-
-        for(int i = 0; i < imgIn[k].rows; i += 8) {
-            for(int j = 0; j < imgIn[k].cols; j += 8) {
-                Rect window(i, j, 8, 8);
-                Mat block = imgIn[k](window);
-
-                res(window) = block.mul(mask);
-
-            }
+    for(int i = 0; i < img.rows; i++) {
+        for(int j = 0; j < img.cols; j++) {
+            res.at<float>(i, j) = log(1 + fabs(img.at<float>(i, j))) / log(1 + maxVal) * 255;
         }
-
-        imgOut.push_back(res);
     }
+
+    Mat in(res.size(), CV_8UC1);
+    res.convertTo(in, CV_8UC1);
+    Mat out(res.size(), CV_8UC1);
+    applyColorMap(in, out, COLORMAP_JET);
+
+    return out;
 }
 
-void applyBlockTransform(const vector<Mat> & imgIn, vector<Mat> & imgOut, bool inverse = false) {
-    Mat_<float> m1(8, 8);
-    m1 << 16, 11, 10, 16, 24, 40, 51, 61,
-          12, 12, 14, 19, 26, 58, 60, 55,
-          14, 13, 16, 24, 40, 57, 69, 56,
-          14, 17, 22, 29, 51, 87, 80, 62,
-          18, 22, 37, 56, 68, 109, 103, 77,
-          24, 35, 55, 64, 81, 104, 113, 92,
-          49, 64, 78, 87, 103, 121, 120, 101,
-          72, 92, 95, 98, 112, 100, 103, 99;
-    Mat mask = m1;
-
-    for(int k = 0; k < 3; k++) {
-        Mat res(imgIn[k].size(), CV_32FC1);
-
-        for(int i = 0; i < imgIn[k].rows; i += 8) {
-            for(int j = 0; j < imgIn[k].cols; j += 8) {
-                Rect window(i, j, 8, 8);
-                Mat block = imgIn[k](window);
-
-                for (int i_mask = 0; i_mask < mask.rows; i_mask++) {
-                    for (int j_mask = 0; j_mask < mask.rows; j_mask++) {
-                        if (!inverse) {
-                            res(window).at<float>(i_mask, j_mask) = round(block.at<float>(i_mask, j_mask) / mask.at<float>(i_mask, j_mask));
-                        }
-                        if (inverse) {
-                            res(window).at<float>(i_mask, j_mask) = block.at<float>(i_mask, j_mask) * mask.at<float>(i_mask, j_mask);
-                        }
-                    }
-                }
-            }
-        }
-
-        imgOut.push_back(res);
-    }
-}
-
-void applyInverseBlockTransform(const vector<Mat> & imgIn, vector<Mat> & imgOut)
+//=======================================================================================
+// convert a vector of matrices of dct coeficients to a vector of visualizable images
+//=======================================================================================
+void visualizeDCT(const vector<Mat> & img)
 {
-    applyBlockTransform(imgIn, imgOut, true);
+    for(int k = 0; k < 3; k++) {
+        Mat res;
+        res = visualizeDCT(img[k]);
+
+        imshow("DCT", res);
+        waitKey();
+
+    }
+
 }
 
+void visualizeDCTHistograms(vector<Mat> & imgIn) {
+    for(int k = 0; k < 3; k++) {
+        Mat hist;
 
+        computeHistogram(norm_0_255(imgIn[k]), hist);
+        displayHistogram(hist);
+
+        std::cout << "Entropy DCT canal " << std::to_string(k) << " : " << computeEntropy(imgIn[k]) << '\n';
+    }
+}
+
+//=======================================================================================
+// nullify dct coeficients according to several masks
+//=======================================================================================
 void nullifyCoefficients(const vector<Mat> & imgIn, vector<Mat> & imgOut, int i = 0)
 {
 
@@ -435,49 +376,118 @@ void nullifyCoefficients(const vector<Mat> & imgIn, vector<Mat> & imgOut, int i 
   }
 }
 
-Mat visualizeDCT(const Mat & img)
-{
-    double maxVal;
-    minMaxLoc(img, NULL, &maxVal, NULL, NULL);
+//=======================================================================================
+// discrete cosine transform on 8x8 blocks
+//=======================================================================================
+void computeBlockDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut, bool inverse = false) {
+    for(int k = 0; k < 3; k++) {
+        Mat res(imgIn[k].size(), CV_32FC1);
 
-    Mat res(img.size(), CV_32FC1);
+        for(int i = 0; i < imgIn[k].rows; i += 8) {
+            for(int j = 0; j < imgIn[k].cols; j += 8) {
+                Rect window(i, j, 8, 8);
+                Mat block = imgIn[k](window);
 
-    for(int i = 0; i < img.rows; i++) {
-        for(int j = 0; j < img.cols; j++) {
-            res.at<float>(i, j) = log(1 + fabs(img.at<float>(i, j))) / log(1 + maxVal) * 255;
+                if(!inverse) {
+                    dct(block, res(window));
+                }
+                if (inverse) {
+                    idct(block, res(window));
+                }
+
+            }
         }
+
+        imgOut.push_back(res);
     }
-
-    Mat in(res.size(), CV_8UC1);
-    res.convertTo(in, CV_8UC1);
-    Mat out(res.size(), CV_8UC1);
-    applyColorMap(in, out, COLORMAP_JET);
-
-    return out;
 }
 
-void visualizeDCT(const vector<Mat> & img)
+//=======================================================================================
+// inverse discrete cosine transform on 8x8 blocks
+//=======================================================================================
+void computeInverseBlockDCT(const vector<Mat> & imgIn, vector<Mat> & imgOut)
 {
-    for(int k = 0; k < 3; k++) {
-        Mat res;
-        res = visualizeDCT(img[k]);
-
-        imshow("DCT", res);
-        waitKey();
-
-    }
-
+    computeBlockDCT(imgIn, imgOut, true);
 }
 
-void visualizeDCTHistograms(vector<Mat> & imgIn) {
+//=======================================================================================
+// apply a nullifying mask on dct coeficients in 8x8 blocks
+//=======================================================================================
+void applyBlockMask(const vector<Mat> & imgIn, vector<Mat> & imgOut) {
+    Mat_<float> m1(8, 8);
+    m1 << 1, 1, 1, 1, 1, 0, 0, 0,
+          1, 1, 1, 1, 0, 0, 0, 0,
+          1, 1, 1, 0, 0, 0, 0, 0,
+          1, 1, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0;
+    Mat mask = m1;
+
     for(int k = 0; k < 3; k++) {
-        Mat hist;
+        Mat res(imgIn[k].size(), CV_32FC1);
 
-        computeHistogram(norm_0_255(imgIn[k]), hist);
-        displayHistogram(hist);
+        for(int i = 0; i < imgIn[k].rows; i += 8) {
+            for(int j = 0; j < imgIn[k].cols; j += 8) {
+                Rect window(i, j, 8, 8);
+                Mat block = imgIn[k](window);
 
-        std::cout << "Entropy DCT canal " << toString(k) << " : " << computeEntropy(imgIn[k]) << '\n';
+                res(window) = block.mul(mask);
+
+            }
+        }
+
+        imgOut.push_back(res);
     }
+}
+
+//=======================================================================================
+// apply a JPEG transformation on dct coeficients in 8x8 blocks
+//=======================================================================================
+void applyBlockTransform(const vector<Mat> & imgIn, vector<Mat> & imgOut, bool inverse = false) {
+    Mat_<float> m1(8, 8);
+    m1 << 16, 11, 10, 16, 24, 40, 51, 61,
+          12, 12, 14, 19, 26, 58, 60, 55,
+          14, 13, 16, 24, 40, 57, 69, 56,
+          14, 17, 22, 29, 51, 87, 80, 62,
+          18, 22, 37, 56, 68, 109, 103, 77,
+          24, 35, 55, 64, 81, 104, 113, 92,
+          49, 64, 78, 87, 103, 121, 120, 101,
+          72, 92, 95, 98, 112, 100, 103, 99;
+    Mat mask = m1;
+
+    for(int k = 0; k < 3; k++) {
+        Mat res(imgIn[k].size(), CV_32FC1);
+
+        for(int i = 0; i < imgIn[k].rows; i += 8) {
+            for(int j = 0; j < imgIn[k].cols; j += 8) {
+                Rect window(i, j, 8, 8);
+                Mat block = imgIn[k](window);
+
+                for (int i_mask = 0; i_mask < mask.rows; i_mask++) {
+                    for (int j_mask = 0; j_mask < mask.rows; j_mask++) {
+                        if (!inverse) {
+                            res(window).at<float>(i_mask, j_mask) = round(block.at<float>(i_mask, j_mask) / mask.at<float>(i_mask, j_mask));
+                        }
+                        if (inverse) {
+                            res(window).at<float>(i_mask, j_mask) = block.at<float>(i_mask, j_mask) * mask.at<float>(i_mask, j_mask);
+                        }
+                    }
+                }
+            }
+        }
+
+        imgOut.push_back(res);
+    }
+}
+
+//=======================================================================================
+// apply inverse JPEG transformation on dct coeficients in 8x8 blocks
+//=======================================================================================
+void applyInverseBlockTransform(const vector<Mat> & imgIn, vector<Mat> & imgOut)
+{
+    applyBlockTransform(imgIn, imgOut, true);
 }
 
 //=======================================================================================
@@ -531,7 +541,19 @@ int main(int argc, char** argv){
     std::vector<Mat> imgVector;
     split(srcYCrCb, imgVector);
 
-    bool save = true;
+    bool save = false;
+
+    if (save) {
+
+        for (int i = 0; i < 3; i++) {
+            Mat hist;
+            computeHistogram(norm_0_255(imgVector[i]), hist);
+            std::cout << "Entropy DCT canal " << std::to_string(i) << " : " << computeEntropy(imgVector[i]) << '\n';
+            imwrite("ImageRes/orig_histo_"+ std::to_string(i) +".jpg", displayHistogram(hist));
+
+        }
+
+    }
 
     std::cout<< "-------- TP2 : 2D Discrete Cosine Transform --------" << std::endl;
     std::cout << "1. DCT and inverse DCT" << std::endl;
@@ -546,6 +568,11 @@ int main(int argc, char** argv){
     std::cin >> choice;
 
     switch (choice) {
+        case 0:
+        {
+            std::cout << "Exiting program..." << '\n';
+        }
+
         case 1:
         {
             std::vector<Mat> dctVector;

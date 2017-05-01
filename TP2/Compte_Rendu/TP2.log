@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Arch Linux) (preloaded format=pdflatex 2017.4.23)  1 MAY 2017 15:11
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Arch Linux) (preloaded format=pdflatex 2017.4.23)  1 MAY 2017 17:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -788,34 +788,553 @@ Underfull \hbox (badness 10000) in paragraph at lines 70--71
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 76--77
+[2]
+Underfull \hbox (badness 10000) in paragraph at lines 79--80
 
  []
 
-[2] Excluding 'comment' comment. [3] (./TP2.lof)
+<../boats.jpg, id=15, 500.03027pt x 500.03027pt>
+File: ../boats.jpg Graphic file (type jpg)
+ <use ../boats.jpg>
+Package pdftex.def Info: ../boats.jpg used on input line 86.
+(pdftex.def)             Requested size: 250.01453pt x 250.01453pt.
+
+<../ImageRes/idct_result.jpg, id=16, 513.92pt x 513.92pt>
+File: ../ImageRes/idct_result.jpg Graphic file (type jpg)
+
+<use ../ImageRes/idct_result.jpg>
+Package pdftex.def Info: ../ImageRes/idct_result.jpg used on input line 96.
+(pdftex.def)             Requested size: 256.95937pt x 256.95937pt.
+ [3 <../boats.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 104--105
+
+ []
+
+<../ImageRes/dct_0.jpg, id=20, 513.92pt x 513.92pt>
+File: ../ImageRes/dct_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_0.jpg>
+Package pdftex.def Info: ../ImageRes/dct_0.jpg used on input line 110.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/dct_1.jpg, id=21, 513.92pt x 513.92pt>
+File: ../ImageRes/dct_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_1.jpg>
+Package pdftex.def Info: ../ImageRes/dct_1.jpg used on input line 111.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/dct_2.jpg, id=22, 513.92pt x 513.92pt>
+File: ../ImageRes/dct_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_2.jpg>
+Package pdftex.def Info: ../ImageRes/dct_2.jpg used on input line 112.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+ [4 <../ImageRes/idct_result.jpg>]
+<../ImageRes/dct_histo_0.jpg, id=26, 513.92pt x 401.5pt>
+File: ../ImageRes/dct_histo_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_histo_0.jpg>
+Package pdftex.def Info: ../ImageRes/dct_histo_0.jpg used on input line 121.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/dct_histo_1.jpg, id=27, 513.92pt x 401.5pt>
+File: ../ImageRes/dct_histo_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_histo_1.jpg>
+Package pdftex.def Info: ../ImageRes/dct_histo_1.jpg used on input line 122.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/dct_histo_2.jpg, id=28, 513.92pt x 401.5pt>
+File: ../ImageRes/dct_histo_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_histo_2.jpg>
+Package pdftex.def Info: ../ImageRes/dct_histo_2.jpg used on input line 123.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/dct_masked0_0.jpg, id=29, 513.92pt x 513.92pt>
+File: ../ImageRes/dct_masked0_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked0_0.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked0_0.jpg used on input line 138.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/dct_masked0_1.jpg, id=30, 513.92pt x 513.92pt>
+File: ../ImageRes/dct_masked0_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked0_1.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked0_1.jpg used on input line 139.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/dct_masked0_2.jpg, id=31, 513.92pt x 513.92pt>
+File: ../ImageRes/dct_masked0_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked0_2.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked0_2.jpg used on input line 140.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+ [5 <../ImageRes/dct_0.jpg> <../ImageRes/dct_1.jpg> <../ImageRes/dct_2.jpg> <..
+/ImageRes/dct_histo_0.jpg> <../ImageRes/dct_histo_1.jpg> <../ImageRes/dct_histo
+_2.jpg>]
+<../ImageRes/dct_masked0_histo_0.jpg, id=35, 513.92pt x 401.5pt>
+File: ../ImageRes/dct_masked0_histo_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked0_histo_0.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked0_histo_0.jpg used on input line
+ 147.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/dct_masked0_histo_1.jpg, id=36, 513.92pt x 401.5pt>
+File: ../ImageRes/dct_masked0_histo_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked0_histo_1.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked0_histo_1.jpg used on input line
+ 148.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/dct_masked0_histo_2.jpg, id=37, 513.92pt x 401.5pt>
+File: ../ImageRes/dct_masked0_histo_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked0_histo_2.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked0_histo_2.jpg used on input line
+ 149.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/idct_masked0_result.jpg, id=38, 513.92pt x 513.92pt>
+File: ../ImageRes/idct_masked0_result.jpg Graphic file (type jpg)
+
+<use ../ImageRes/idct_masked0_result.jpg>
+Package pdftex.def Info: ../ImageRes/idct_masked0_result.jpg used on input line
+ 162.
+(pdftex.def)             Requested size: 205.56435pt x 205.56435pt.
+
+<../ImageRes/idct_masked0_disto.jpg, id=39, 513.92pt x 513.92pt>
+File: ../ImageRes/idct_masked0_disto.jpg Graphic file (type jpg)
+
+<use ../ImageRes/idct_masked0_disto.jpg>
+Package pdftex.def Info: ../ImageRes/idct_masked0_disto.jpg used on input line 
+163.
+(pdftex.def)             Requested size: 205.56435pt x 205.56435pt.
+ [6 <../ImageRes/dct_masked0_0.jpg> <../ImageRes/dct_masked0_1.jpg> <../ImageRe
+s/dct_masked0_2.jpg> <../ImageRes/dct_masked0_histo_0.jpg> <../ImageRes/dct_mas
+ked0_histo_1.jpg> <../ImageRes/dct_masked0_histo_2.jpg>] <../ImageRes/dct_maske
+d1_0.jpg, id=44, 513.92pt x 513.92pt>
+File: ../ImageRes/dct_masked1_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked1_0.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked1_0.jpg used on input line 178.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/dct_masked1_1.jpg, id=45, 513.92pt x 513.92pt>
+File: ../ImageRes/dct_masked1_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked1_1.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked1_1.jpg used on input line 179.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/dct_masked1_2.jpg, id=46, 513.92pt x 513.92pt>
+File: ../ImageRes/dct_masked1_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked1_2.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked1_2.jpg used on input line 180.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/dct_masked1_histo_0.jpg, id=47, 513.92pt x 401.5pt>
+File: ../ImageRes/dct_masked1_histo_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked1_histo_0.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked1_histo_0.jpg used on input line
+ 187.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/dct_masked1_histo_1.jpg, id=48, 513.92pt x 401.5pt>
+File: ../ImageRes/dct_masked1_histo_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked1_histo_1.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked1_histo_1.jpg used on input line
+ 188.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/dct_masked1_histo_2.jpg, id=49, 513.92pt x 401.5pt>
+File: ../ImageRes/dct_masked1_histo_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked1_histo_2.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked1_histo_2.jpg used on input line
+ 189.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+ [7 <../ImageRes/idct_masked0_result.jpg> <../ImageRes/idct_masked0_disto.jpg> 
+<../ImageRes/dct_masked1_0.jpg> <../ImageRes/dct_masked1_1.jpg> <../ImageRes/dc
+t_masked1_2.jpg>]
+<../ImageRes/idct_masked1_result.jpg, id=53, 513.92pt x 513.92pt>
+File: ../ImageRes/idct_masked1_result.jpg Graphic file (type jpg)
+
+<use ../ImageRes/idct_masked1_result.jpg>
+Package pdftex.def Info: ../ImageRes/idct_masked1_result.jpg used on input line
+ 202.
+(pdftex.def)             Requested size: 205.56435pt x 205.56435pt.
+
+<../ImageRes/idct_masked1_disto.jpg, id=54, 513.92pt x 513.92pt>
+File: ../ImageRes/idct_masked1_disto.jpg Graphic file (type jpg)
+
+<use ../ImageRes/idct_masked1_disto.jpg>
+Package pdftex.def Info: ../ImageRes/idct_masked1_disto.jpg used on input line 
+203.
+(pdftex.def)             Requested size: 205.56435pt x 205.56435pt.
+
+<../ImageRes/dct_masked2_0.jpg, id=55, 513.92pt x 513.92pt>
+File: ../ImageRes/dct_masked2_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked2_0.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked2_0.jpg used on input line 217.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/dct_masked2_1.jpg, id=56, 513.92pt x 513.92pt>
+File: ../ImageRes/dct_masked2_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked2_1.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked2_1.jpg used on input line 218.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/dct_masked2_2.jpg, id=57, 513.92pt x 513.92pt>
+File: ../ImageRes/dct_masked2_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked2_2.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked2_2.jpg used on input line 219.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+ [8 <../ImageRes/dct_masked1_histo_0.jpg> <../ImageRes/dct_masked1_histo_1.jpg>
+ <../ImageRes/dct_masked1_histo_2.jpg> <../ImageRes/idct_masked1_result.jpg> <.
+./ImageRes/idct_masked1_disto.jpg>]
+<../ImageRes/dct_masked2_histo_0.jpg, id=61, 513.92pt x 401.5pt>
+File: ../ImageRes/dct_masked2_histo_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked2_histo_0.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked2_histo_0.jpg used on input line
+ 226.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/dct_masked2_histo_1.jpg, id=62, 513.92pt x 401.5pt>
+File: ../ImageRes/dct_masked2_histo_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked2_histo_1.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked2_histo_1.jpg used on input line
+ 227.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/dct_masked2_histo_2.jpg, id=63, 513.92pt x 401.5pt>
+File: ../ImageRes/dct_masked2_histo_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked2_histo_2.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked2_histo_2.jpg used on input line
+ 228.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/idct_masked2_result.jpg, id=64, 513.92pt x 513.92pt>
+File: ../ImageRes/idct_masked2_result.jpg Graphic file (type jpg)
+
+<use ../ImageRes/idct_masked2_result.jpg>
+Package pdftex.def Info: ../ImageRes/idct_masked2_result.jpg used on input line
+ 241.
+(pdftex.def)             Requested size: 205.56435pt x 205.56435pt.
+
+<../ImageRes/idct_masked2_disto.jpg, id=65, 513.92pt x 513.92pt>
+File: ../ImageRes/idct_masked2_disto.jpg Graphic file (type jpg)
+
+<use ../ImageRes/idct_masked2_disto.jpg>
+Package pdftex.def Info: ../ImageRes/idct_masked2_disto.jpg used on input line 
+242.
+(pdftex.def)             Requested size: 205.56435pt x 205.56435pt.
+ [9 <../ImageRes/dct_masked2_0.jpg> <../ImageRes/dct_masked2_1.jpg> <../ImageRe
+s/dct_masked2_2.jpg> <../ImageRes/dct_masked2_histo_0.jpg> <../ImageRes/dct_mas
+ked2_histo_1.jpg> <../ImageRes/dct_masked2_histo_2.jpg>] <../ImageRes/dct_maske
+d3_0.jpg, id=69, 513.92pt x 513.92pt>
+File: ../ImageRes/dct_masked3_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked3_0.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked3_0.jpg used on input line 256.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/dct_masked3_1.jpg, id=70, 513.92pt x 513.92pt>
+File: ../ImageRes/dct_masked3_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked3_1.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked3_1.jpg used on input line 257.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/dct_masked3_2.jpg, id=71, 513.92pt x 513.92pt>
+File: ../ImageRes/dct_masked3_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked3_2.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked3_2.jpg used on input line 258.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/dct_masked3_histo_0.jpg, id=72, 513.92pt x 401.5pt>
+File: ../ImageRes/dct_masked3_histo_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked3_histo_0.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked3_histo_0.jpg used on input line
+ 265.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/dct_masked3_histo_1.jpg, id=73, 513.92pt x 401.5pt>
+File: ../ImageRes/dct_masked3_histo_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked3_histo_1.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked3_histo_1.jpg used on input line
+ 266.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/dct_masked3_histo_2.jpg, id=74, 513.92pt x 401.5pt>
+File: ../ImageRes/dct_masked3_histo_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/dct_masked3_histo_2.jpg>
+Package pdftex.def Info: ../ImageRes/dct_masked3_histo_2.jpg used on input line
+ 267.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+ [10 <../ImageRes/idct_masked2_result.jpg> <../ImageRes/idct_masked2_disto.jpg>
+ <../ImageRes/dct_masked3_0.jpg> <../ImageRes/dct_masked3_1.jpg> <../ImageRes/d
+ct_masked3_2.jpg>]
+File: ../ImageRes/idct_masked2_result.jpg Graphic file (type jpg)
+
+<use ../ImageRes/idct_masked2_result.jpg>
+Package pdftex.def Info: ../ImageRes/idct_masked2_result.jpg used on input line
+ 280.
+(pdftex.def)             Requested size: 205.56435pt x 205.56435pt.
+File: ../ImageRes/idct_masked2_disto.jpg Graphic file (type jpg)
+
+<use ../ImageRes/idct_masked2_disto.jpg>
+Package pdftex.def Info: ../ImageRes/idct_masked2_disto.jpg used on input line 
+281.
+(pdftex.def)             Requested size: 205.56435pt x 205.56435pt.
+
+<../ImageRes/blockdct_0.jpg, id=78, 513.92pt x 513.92pt>
+File: ../ImageRes/blockdct_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockdct_0.jpg>
+Package pdftex.def Info: ../ImageRes/blockdct_0.jpg used on input line 300.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/blockdct_1.jpg, id=79, 513.92pt x 513.92pt>
+File: ../ImageRes/blockdct_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockdct_1.jpg>
+Package pdftex.def Info: ../ImageRes/blockdct_1.jpg used on input line 301.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/blockdct_2.jpg, id=80, 513.92pt x 513.92pt>
+File: ../ImageRes/blockdct_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockdct_2.jpg>
+Package pdftex.def Info: ../ImageRes/blockdct_2.jpg used on input line 302.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+ [11 <../ImageRes/dct_masked3_histo_0.jpg> <../ImageRes/dct_masked3_histo_1.jpg
+> <../ImageRes/dct_masked3_histo_2.jpg>]
+<../ImageRes/blockdct_histo_0.jpg, id=84, 513.92pt x 401.5pt>
+File: ../ImageRes/blockdct_histo_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockdct_histo_0.jpg>
+Package pdftex.def Info: ../ImageRes/blockdct_histo_0.jpg used on input line 30
+9.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/blockdct_histo_1.jpg, id=85, 513.92pt x 401.5pt>
+File: ../ImageRes/blockdct_histo_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockdct_histo_1.jpg>
+Package pdftex.def Info: ../ImageRes/blockdct_histo_1.jpg used on input line 31
+0.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/blockdct_histo_2.jpg, id=86, 513.92pt x 401.5pt>
+File: ../ImageRes/blockdct_histo_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockdct_histo_2.jpg>
+Package pdftex.def Info: ../ImageRes/blockdct_histo_2.jpg used on input line 31
+1.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+File: ../ImageRes/idct_masked2_result.jpg Graphic file (type jpg)
+
+<use ../ImageRes/idct_masked2_result.jpg>
+Package pdftex.def Info: ../ImageRes/idct_masked2_result.jpg used on input line
+ 324.
+(pdftex.def)             Requested size: 256.95937pt x 256.95937pt.
+ [12 <../ImageRes/blockdct_0.jpg> <../ImageRes/blockdct_1.jpg> <../ImageRes/blo
+ckdct_2.jpg> <../ImageRes/blockdct_histo_0.jpg> <../ImageRes/blockdct_histo_1.j
+pg> <../ImageRes/blockdct_histo_2.jpg>] <../ImageRes/blockdct_masked_0.jpg, id=
+91, 513.92pt x 513.92pt>
+File: ../ImageRes/blockdct_masked_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockdct_masked_0.jpg>
+Package pdftex.def Info: ../ImageRes/blockdct_masked_0.jpg used on input line 3
+40.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/blockdct_masked_1.jpg, id=92, 513.92pt x 513.92pt>
+File: ../ImageRes/blockdct_masked_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockdct_masked_1.jpg>
+Package pdftex.def Info: ../ImageRes/blockdct_masked_1.jpg used on input line 3
+41.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/blockdct_masked_2.jpg, id=93, 513.92pt x 513.92pt>
+File: ../ImageRes/blockdct_masked_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockdct_masked_2.jpg>
+Package pdftex.def Info: ../ImageRes/blockdct_masked_2.jpg used on input line 3
+42.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/blockdct_masked_histo_0.jpg, id=94, 513.92pt x 401.5pt>
+File: ../ImageRes/blockdct_masked_histo_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockdct_masked_histo_0.jpg>
+Package pdftex.def Info: ../ImageRes/blockdct_masked_histo_0.jpg used on input 
+line 349.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/blockdct_masked_histo_1.jpg, id=95, 513.92pt x 401.5pt>
+File: ../ImageRes/blockdct_masked_histo_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockdct_masked_histo_1.jpg>
+Package pdftex.def Info: ../ImageRes/blockdct_masked_histo_1.jpg used on input 
+line 350.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/blockdct_masked_histo_2.jpg, id=96, 513.92pt x 401.5pt>
+File: ../ImageRes/blockdct_masked_histo_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockdct_masked_histo_2.jpg>
+Package pdftex.def Info: ../ImageRes/blockdct_masked_histo_2.jpg used on input 
+line 351.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+ [13 <../ImageRes/blockdct_masked_0.jpg> <../ImageRes/blockdct_masked_1.jpg> <.
+./ImageRes/blockdct_masked_2.jpg>] <../ImageRes/blockidct_masked_result.jpg, id
+=100, 513.92pt x 513.92pt>
+File: ../ImageRes/blockidct_masked_result.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockidct_masked_result.jpg>
+Package pdftex.def Info: ../ImageRes/blockidct_masked_result.jpg used on input 
+line 364.
+(pdftex.def)             Requested size: 205.56435pt x 205.56435pt.
+
+<../ImageRes/blockidct_masked_disto.jpg, id=101, 513.92pt x 513.92pt>
+File: ../ImageRes/blockidct_masked_disto.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockidct_masked_disto.jpg>
+Package pdftex.def Info: ../ImageRes/blockidct_masked_disto.jpg used on input l
+ine 365.
+(pdftex.def)             Requested size: 205.56435pt x 205.56435pt.
+
+<../ImageRes/blockdct_transform_0.jpg, id=102, 513.92pt x 513.92pt>
+File: ../ImageRes/blockdct_transform_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockdct_transform_0.jpg>
+Package pdftex.def Info: ../ImageRes/blockdct_transform_0.jpg used on input lin
+e 379.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/blockdct_transform_1.jpg, id=103, 513.92pt x 513.92pt>
+File: ../ImageRes/blockdct_transform_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockdct_transform_1.jpg>
+Package pdftex.def Info: ../ImageRes/blockdct_transform_1.jpg used on input lin
+e 380.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+
+<../ImageRes/blockdct_transform_2.jpg, id=104, 513.92pt x 513.92pt>
+File: ../ImageRes/blockdct_transform_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockdct_transform_2.jpg>
+Package pdftex.def Info: ../ImageRes/blockdct_transform_2.jpg used on input lin
+e 381.
+(pdftex.def)             Requested size: 128.47968pt x 128.47968pt.
+ [14 <../ImageRes/blockdct_masked_histo_0.jpg> <../ImageRes/blockdct_masked_his
+to_1.jpg> <../ImageRes/blockdct_masked_histo_2.jpg> <../ImageRes/blockidct_mask
+ed_result.jpg> <../ImageRes/blockidct_masked_disto.jpg>]
+<../ImageRes/blockdct_transform_histo_0.jpg, id=108, 513.92pt x 401.5pt>
+File: ../ImageRes/blockdct_transform_histo_0.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockdct_transform_histo_0.jpg>
+Package pdftex.def Info: ../ImageRes/blockdct_transform_histo_0.jpg used on inp
+ut line 388.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/blockdct_transform_histo_1.jpg, id=109, 513.92pt x 401.5pt>
+File: ../ImageRes/blockdct_transform_histo_1.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockdct_transform_histo_1.jpg>
+Package pdftex.def Info: ../ImageRes/blockdct_transform_histo_1.jpg used on inp
+ut line 389.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/blockdct_transform_histo_2.jpg, id=110, 513.92pt x 401.5pt>
+File: ../ImageRes/blockdct_transform_histo_2.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockdct_transform_histo_2.jpg>
+Package pdftex.def Info: ../ImageRes/blockdct_transform_histo_2.jpg used on inp
+ut line 390.
+(pdftex.def)             Requested size: 128.47968pt x 100.37474pt.
+
+<../ImageRes/blockidct_transform_result.jpg, id=111, 513.92pt x 513.92pt>
+File: ../ImageRes/blockidct_transform_result.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockidct_transform_result.jpg>
+Package pdftex.def Info: ../ImageRes/blockidct_transform_result.jpg used on inp
+ut line 403.
+(pdftex.def)             Requested size: 205.56435pt x 205.56435pt.
+
+<../ImageRes/blockidct_transform_disto.jpg, id=112, 513.92pt x 513.92pt>
+File: ../ImageRes/blockidct_transform_disto.jpg Graphic file (type jpg)
+
+<use ../ImageRes/blockidct_transform_disto.jpg>
+Package pdftex.def Info: ../ImageRes/blockidct_transform_disto.jpg used on inpu
+t line 404.
+(pdftex.def)             Requested size: 205.56435pt x 205.56435pt.
+ [15 <../ImageRes/blockdct_transform_0.jpg> <../ImageRes/blockdct_transform_1.j
+pg> <../ImageRes/blockdct_transform_2.jpg> <../ImageRes/blockdct_transform_hist
+o_0.jpg> <../ImageRes/blockdct_transform_histo_1.jpg> <../ImageRes/blockdct_tra
+nsform_histo_2.jpg>]
+Excluding 'comment' comment. [16 <../ImageRes/blockidct_transform_result.jpg> <
+../ImageRes/blockidct_transform_disto.jpg>] (./TP2.lof
+Overfull \hbox (10.23659pt too wide) in paragraph at lines 18--18
+ [][] []\T1/qtm/m/n/12 Coefficients DCT par blocs 8x8 pour les ca-naux Y, Cb et
+ Cr de l'image "boats.pgm" [][]  
+ []
+
+[17
+
+]
+Overfull \hbox (22.23659pt too wide) in paragraph at lines 21--21
+ [][] []\T1/qtm/m/n/12 Coefficients DCT par blocs 8x8 pour les ca-naux Y, Cb et
+ Cr de l'image "boats.pgm" 
+ []
+
+
+Overfull \hbox (22.23659pt too wide) in paragraph at lines 24--24
+ [][] []\T1/qtm/m/n/12 Coefficients DCT par blocs 8x8 pour les ca-naux Y, Cb et
+ Cr de l'image "boats.pgm" 
+ []
+
+)
 \tf@lof=\write5
 \openout5 = `TP2.lof'.
 
- [4
-
-] (./TP2.aux) ) 
+ [18] (./TP2.aux) ) 
 Here is how much of TeX's memory you used:
- 6207 strings out of 493013
- 82213 string characters out of 6139317
- 163395 words of memory out of 5000000
- 9591 multiletter control sequences out of 15000+600000
- 44650 words of font info for 63 fonts, out of 8000000 for 9000
+ 6523 strings out of 493013
+ 92569 string characters out of 6139317
+ 167395 words of memory out of 5000000
+ 9844 multiletter control sequences out of 15000+600000
+ 47743 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 37i,6n,30p,719b,439s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf-dist/fonts/enc/dvips/tex-gyre/q-ec.enc}{/usr/s
-hare/texmf-dist/fonts/enc/dvips/tex-gyre/q-ec-sc.enc}</usr/share/texmf-dist/fon
-ts/type1/public/tex-gyre/qtmb.pfb></usr/share/texmf-dist/fonts/type1/public/tex
--gyre/qtmr.pfb>
-Output written on TP2.pdf (5 pages, 60604 bytes).
+ 37i,7n,30p,399b,439s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf-dist/fonts/enc/dvips/tex-gyre/q-ec.enc}{/u
+sr/share/texmf-dist/fonts/enc/dvips/tex-gyre/q-ec-sc.enc}</usr/share/texmf-dist
+/fonts/type1/public/tex-gyre/qtmb.pfb></usr/share/texmf-dist/fonts/type1/public
+/tex-gyre/qtmr.pfb>
+Output written on TP2.pdf (19 pages, 6042740 bytes).
 PDF statistics:
- 32 PDF objects out of 1000 (max. 8388607)
- 22 compressed objects within 1 object stream
+ 138 PDF objects out of 1000 (max. 8388607)
+ 54 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 301 words of extra memory for PDF output out of 10000 (max. 10000000)
 

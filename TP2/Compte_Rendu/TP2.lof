@@ -1,1 +1,26 @@
 \select@language {french}
+\contentsline {figure}{\numberline {1}{\ignorespaces Image originale}}{3}
+\contentsline {figure}{\numberline {2}{\ignorespaces R\IeC {\'e}sultat de la DCT inverse}}{4}
+\contentsline {figure}{\numberline {3}{\ignorespaces Coefficients DCT pour les canaux Y, Cb et Cr de l'image "boats.pgm"}}{5}
+\contentsline {figure}{\numberline {4}{\ignorespaces Histogrammes des coefficients DCT pour les canaux Y, Cb et Cr de l'image "boats.pgm"}}{5}
+\contentsline {figure}{\numberline {5}{\ignorespaces Coefficients DCT pour les canaux Y, Cb et Cr de l'image "boats.pgm" apr\IeC {\`e}s masquage coin bas droit}}{6}
+\contentsline {figure}{\numberline {6}{\ignorespaces Histogrammes des coefficients DCT pour les canaux Y, Cb et Cr de l'image "boats.pgm" apr\IeC {\`e}s masquage coin bas droit}}{6}
+\contentsline {figure}{\numberline {7}{\ignorespaces R\IeC {\'e}sultat de la DCT inverse et carte de distortion apr\IeC {\`e}s masquage coin bas droit}}{7}
+\contentsline {figure}{\numberline {8}{\ignorespaces Coefficients DCT pour les canaux Y, Cb et Cr de l'image "boats.pgm" apr\IeC {\`e}s masquage moiti\IeC {\'e} droite}}{7}
+\contentsline {figure}{\numberline {9}{\ignorespaces Histogrammes des coefficients DCT pour les canaux Y, Cb et Cr de l'image "boats.pgm" apr\IeC {\`e}s masquage moiti\IeC {\'e} droite}}{8}
+\contentsline {figure}{\numberline {10}{\ignorespaces R\IeC {\'e}sultat de la DCT inverse et carte de distortion apr\IeC {\`e}s masquage moiti\IeC {\'e} droite}}{8}
+\contentsline {figure}{\numberline {11}{\ignorespaces Coefficients DCT pour les canaux Y, Cb et Cr de l'image "boats.pgm" apr\IeC {\`e}s masquage moiti\IeC {\'e} bas}}{9}
+\contentsline {figure}{\numberline {12}{\ignorespaces Histogrammes des coefficients DCT pour les canaux Y, Cb et Cr de l'image "boats.pgm" apr\IeC {\`e}s masquage moiti\IeC {\'e} bas}}{9}
+\contentsline {figure}{\numberline {13}{\ignorespaces R\IeC {\'e}sultat de la DCT inverse et carte de distortion apr\IeC {\`e}s masquage moiti\IeC {\'e} bas}}{10}
+\contentsline {figure}{\numberline {14}{\ignorespaces Coefficients DCT pour les canaux Y, Cb et Cr de l'image "boats.pgm" apr\IeC {\`e}s masquage coin bas gauche}}{10}
+\contentsline {figure}{\numberline {15}{\ignorespaces Histogrammes des coefficients DCT pour les canaux Y, Cb et Cr de l'image "boats.pgm" apr\IeC {\`e}s masquage coin bas gauche}}{11}
+\contentsline {figure}{\numberline {16}{\ignorespaces R\IeC {\'e}sultat de la DCT inverse et carte de distortion apr\IeC {\`e}s masquage coin bas gauche}}{11}
+\contentsline {figure}{\numberline {17}{\ignorespaces Coefficients DCT par blocs 8x8 pour les canaux Y, Cb et Cr de l'image "boats.pgm"}}{12}
+\contentsline {figure}{\numberline {18}{\ignorespaces Histogrammes des coefficients DCT par blocs 8x8 pour les canaux Y, Cb et Cr de l'image "boats.pgm"}}{12}
+\contentsline {figure}{\numberline {19}{\ignorespaces R\IeC {\'e}sultat de la DCT par blocs 8x8 inverse}}{13}
+\contentsline {figure}{\numberline {20}{\ignorespaces Coefficients DCT par blocs 8x8 pour les canaux Y, Cb et Cr de l'image "boats.pgm" apr\IeC {\`e}s masquage}}{13}
+\contentsline {figure}{\numberline {21}{\ignorespaces Histogrammes des coefficients DCT par blocs 8x8 pour les canaux Y, Cb et Cr de l'image "boats.pgm" apr\IeC {\`e}s masquage}}{14}
+\contentsline {figure}{\numberline {22}{\ignorespaces R\IeC {\'e}sultat de la DCT par blocs 8x8 inverse et carte de distortion apr\IeC {\`e}s masquage}}{14}
+\contentsline {figure}{\numberline {23}{\ignorespaces Coefficients DCT par blocs 8x8 pour les canaux Y, Cb et Cr de l'image "boats.pgm" apr\IeC {\`e}s transformation}}{15}
+\contentsline {figure}{\numberline {24}{\ignorespaces Histogrammes des coefficients DCT par blocs 8x8 pour les canaux Y, Cb et Cr de l'image "boats.pgm" apr\IeC {\`e}s transformation}}{15}
+\contentsline {figure}{\numberline {25}{\ignorespaces R\IeC {\'e}sultat de la DCT par blocs 8x8 inverse et carte de distortion apr\IeC {\`e}s transformation}}{16}
