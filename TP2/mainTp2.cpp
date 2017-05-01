@@ -172,7 +172,7 @@ Mat displayHistogram(const Mat& myHist)
 	/// Display
 	namedWindow("Display Histo", CV_WINDOW_AUTOSIZE );
 	imshow("Display Histo", histImage );
-	cvWaitKey();
+	waitKey();
 	return histImage;
 }
 
@@ -369,14 +369,6 @@ void applyInverseBlockTransform(const vector<Mat> & imgIn, vector<Mat> & imgOut)
 
 void nullifyCoefficients(const vector<Mat> & imgIn, vector<Mat> & imgOut, int i = 0)
 {
-    // #TODO mettre un switch et changer le trucs
-
-    // int x = (inputImage.cols / 2);
-    // int y = (inputImage.rows / 2);
-    // int width = inputImage.cols - x;
-    // int height = inputImage.rows - y;
-    //
-    // Rect mask(x, y, width, height);
 
     int x, y, width, height;
 
@@ -385,41 +377,54 @@ void nullifyCoefficients(const vector<Mat> & imgIn, vector<Mat> & imgOut, int i 
 
   Rect mask;
 
-  if(i == 0){
-    x = (nbCols/2);
-    y = (nbRows/2);
-    width = nbCols - x;
-    height = nbRows - y;
+  switch (i) {
+      case 0:
+      {
+          x = (nbCols/2);
+          y = (nbRows/2);
+          width = nbCols - x;
+          height = nbRows - y;
 
-    std::cout << "X : " << x << " Y : " << y << " Width : " << width << " Height : " << height << std::endl;
-    mask = Rect(x, y, width, height);
-  }
-  else if(i == 1){
-    x = (nbCols/2);
-    y = 0;
-    width = nbCols - x;
-    height = nbRows - y;
+          mask = Rect(x, y, width, height);
 
-    std::cout << "X : " << x << " Y : " << y << " Width : " << width << " Height : " << height << std::endl;
-    mask = Rect(x, y, width, height);
-  }
-  else if(i == 2){
-    x = 0;
-    y = (nbRows/2);
-    width = nbCols - x;
-    height = nbRows - y;
+          break;
+      }
 
-    std::cout << "X : " << x << " Y : " << y << " Width : " << width << " Height : " << height << std::endl;
-    mask = Rect(x, y, width, height);
-  }
-  else if(i == 3){
-    x = 0;
-    y = (nbRows/2);
-    width = (nbCols/2);
-    height = nbRows - y;
+      case 1:
+      {
+          x = (nbCols/2);
+          y = 0;
+          width = nbCols - x;
+          height = nbRows - y;
 
-    std::cout << "X : " << x << " Y : " << y << " Width : " << width << " Height : " << height << std::endl;
-    mask = Rect(x, y, width, height);
+          mask = Rect(x, y, width, height);
+
+          break;
+      }
+
+      case 2:
+      {
+          x = 0;
+          y = (nbRows/2);
+          width = nbCols - x;
+          height = nbRows - y;
+
+          mask = Rect(x, y, width, height);
+
+          break;
+      }
+
+      case 3:
+      {
+          x = 0;
+          y = (nbRows/2);
+          width = (nbCols/2);
+          height = nbRows - y;
+
+          mask = Rect(x, y, width, height);
+
+          break;
+      }
   }
 
   for(int k = 0; k < 3; k ++){
@@ -427,28 +432,37 @@ void nullifyCoefficients(const vector<Mat> & imgIn, vector<Mat> & imgOut, int i 
       imgIn[k].copyTo(res);
       res(mask).setTo(0);
       imgOut.push_back(res);
+  }
 }
+
+Mat visualizeDCT(const Mat & img)
+{
+    double maxVal;
+    minMaxLoc(img, NULL, &maxVal, NULL, NULL);
+
+    Mat res(img.size(), CV_32FC1);
+
+    for(int i = 0; i < img.rows; i++) {
+        for(int j = 0; j < img.cols; j++) {
+            res.at<float>(i, j) = log(1 + fabs(img.at<float>(i, j))) / log(1 + maxVal) * 255;
+        }
+    }
+
+    Mat in(res.size(), CV_8UC1);
+    res.convertTo(in, CV_8UC1);
+    Mat out(res.size(), CV_8UC1);
+    applyColorMap(in, out, COLORMAP_JET);
+
+    return out;
 }
 
 void visualizeDCT(const vector<Mat> & img)
 {
     for(int k = 0; k < 3; k++) {
-        double maxVal;
-        minMaxLoc(img[k], NULL, &maxVal, NULL, NULL);
+        Mat res;
+        res = visualizeDCT(img[k]);
 
-        Mat res(img[k].size(), CV_32FC1);
-
-        for(int i = 0; i < img[k].rows; i++) {
-            for(int j = 0; j < img[k].cols; j++) {
-                res.at<float>(i, j) = log(1 + fabs(img[k].at<float>(i, j))) / log(1 + maxVal) * 255;
-            }
-        }
-
-        Mat in(res.size(), CV_8UC1);
-        res.convertTo(in, CV_8UC1);
-        Mat out(res.size(), CV_8UC1);
-        applyColorMap(in, out, COLORMAP_JET);
-        imshow("DCT", out);
+        imshow("DCT", res);
         waitKey();
 
     }
@@ -502,17 +516,22 @@ int main(int argc, char** argv){
         waitKey(0); // Wait for a keystroke in the window
     }
 
+    std::vector<Mat> srcVector;
+    split(src, srcVector);
+
     // Convertion de l'image source de uchar vers float 32 bits
-    Mat floatSrc(src.size(), CV_32FC3);
-    src.convertTo(floatSrc, CV_32FC3);
+    Mat src32F(src.size(), CV_32FC3);
+    src.convertTo(src32F, CV_32FC3);
 
     // Conversion de BGR float 32 bits vers YCrCb float 32 bits
-    Mat img(src.size(), CV_32FC3);
-    BGRtoYCrCb(floatSrc, img);
+    Mat srcYCrCb(src.size(), CV_32FC3);
+    BGRtoYCrCb(src32F, srcYCrCb);
 
     // Decomposition des canaux
     std::vector<Mat> imgVector;
-    split(img, imgVector);
+    split(srcYCrCb, imgVector);
+
+    bool save = true;
 
     std::cout<< "-------- TP2 : 2D Discrete Cosine Transform --------" << std::endl;
     std::cout << "1. DCT and inverse DCT" << std::endl;
@@ -520,6 +539,7 @@ int main(int argc, char** argv){
     std::cout << "3. 8x8 block DCT (and inverse)" << std::endl;
     std::cout << "4. 8x8 block DCT (and inverse) with simple binary mask" << std::endl;
     std::cout << "5. 8x8 block DCT (and inverse) with JPEG ponderation matrix" << std::endl;
+    std::cout << "0. Exit program" << std::endl;
     std::cout << "Choose an action to perform : ";
 
     int choice;
@@ -536,9 +556,6 @@ int main(int argc, char** argv){
             std::vector<Mat> idctVector;
             computeInverseDCT(dctVector, idctVector);
 
-            std::cout << "EQM : " << eqm(imgVector[0], idctVector[0]) << std::endl;
-            std::cout << "PSNR : " << psnr(imgVector[0], idctVector[0]) << std::endl;
-
             Mat finalImg;
             merge(idctVector, finalImg);
             YCrCbtoBGR(finalImg, finalImg);
@@ -546,9 +563,33 @@ int main(int argc, char** argv){
             imshow("IDCT", finalImg);
             waitKey();
 
+            std::vector<Mat> finalImgVector;
+            split(finalImg, finalImgVector);
+
+            std::cout << "EQM : " << eqm(srcVector[0], finalImgVector[0]) << std::endl;
+            std::cout << "PSNR : " << psnr(srcVector[0], finalImgVector[0]) << std::endl;
+
+            if (save) {
+                std::cout << "Saving..." << '\n';
+
+                for (int i = 0; i < 3; i++) {
+                    imwrite("ImageRes/dct_"+ std::to_string(i) +".jpg", visualizeDCT(dctVector[i]));
+                    Mat hist;
+                    computeHistogram(norm_0_255(dctVector[i]), hist);
+                    imwrite("ImageRes/dct_histo_"+ std::to_string(i) +".jpg", displayHistogram(hist));
+
+                }
+
+                imwrite("ImageRes/idct_result.jpg", finalImg);
+
+                std::cout << "Finished" << '\n';
+
+            }
+
             dctVector.clear();
             idctVector.clear();
             finalImg.release();
+            finalImgVector.clear();
 
             break;
         }
@@ -567,17 +608,14 @@ int main(int argc, char** argv){
             int maskIndex;
             std::cin >> maskIndex;
 
-            std::vector<Mat> modDdctVector;
-            nullifyCoefficients(dctVector, modDdctVector, maskIndex);
+            std::vector<Mat> modDctVector;
+            nullifyCoefficients(dctVector, modDctVector, maskIndex - 1);
 
-            visualizeDCT(modDdctVector);
-            visualizeDCTHistograms(modDdctVector);
+            visualizeDCT(modDctVector);
+            visualizeDCTHistograms(modDctVector);
 
             std::vector<Mat> idctVector;
-            computeInverseDCT(modDdctVector, idctVector);
-
-            std::cout << "EQM : " << eqm(imgVector[0], idctVector[0]) << std::endl;
-            std::cout << "PSNR : " << psnr(imgVector[0], idctVector[0]) << std::endl;
+            computeInverseDCT(modDctVector, idctVector);
 
             Mat finalImg;
             merge(idctVector, finalImg);
@@ -586,9 +624,37 @@ int main(int argc, char** argv){
             imshow("IDCT", finalImg);
             waitKey();
 
+            std::vector<Mat> finalImgVector;
+            split(finalImg, finalImgVector);
+
+            std::cout << "EQM : " << eqm(srcVector[0], finalImgVector[0]) << std::endl;
+            std::cout << "PSNR : " << psnr(srcVector[0], finalImgVector[0]) << std::endl;
+
+            if (save) {
+                std::cout << "Saving..." << '\n';
+
+                for (int i = 0; i < 3; i++) {
+                    imwrite("ImageRes/dct_masked"+ std::to_string(maskIndex - 1) +"_"+ std::to_string(i) +".jpg", visualizeDCT(modDctVector[i]));
+                    Mat hist;
+                    computeHistogram(norm_0_255(modDctVector[i]), hist);
+                    imwrite("ImageRes/dct_masked"+ std::to_string(maskIndex - 1) +"_histo_"+ std::to_string(i) +".jpg", displayHistogram(hist));
+
+                }
+
+                imwrite("ImageRes/idct_masked"+ std::to_string(maskIndex - 1) +"_result.jpg", finalImg);
+
+                Mat distoMap;
+                distortionMap(srcVector, finalImgVector, distoMap);
+                imwrite("ImageRes/idct_masked"+ std::to_string(maskIndex - 1) +"_disto.jpg", distoMap);
+
+                std::cout << "Finished" << '\n';
+
+            }
+
             dctVector.clear();
             idctVector.clear();
             finalImg.release();
+            finalImgVector.clear();
 
             break;
         }
@@ -603,9 +669,6 @@ int main(int argc, char** argv){
             std::vector<Mat> idctVector;
             computeInverseBlockDCT(dctVector, idctVector);
 
-            std::cout << "EQM : " << eqm(imgVector[0], idctVector[0]) << std::endl;
-            std::cout << "PSNR : " << psnr(imgVector[0], idctVector[0]) << std::endl;
-
             Mat finalImg;
             merge(idctVector, finalImg);
             YCrCbtoBGR(finalImg, finalImg);
@@ -613,9 +676,33 @@ int main(int argc, char** argv){
             imshow("IDCT", finalImg);
             waitKey();
 
+            std::vector<Mat> finalImgVector;
+            split(finalImg, finalImgVector);
+
+            std::cout << "EQM : " << eqm(srcVector[0], finalImgVector[0]) << std::endl;
+            std::cout << "PSNR : " << psnr(srcVector[0], finalImgVector[0]) << std::endl;
+
+            if (save) {
+                std::cout << "Saving..." << '\n';
+
+                for (int i = 0; i < 3; i++) {
+                    imwrite("ImageRes/blockdct_"+ std::to_string(i) +".jpg", visualizeDCT(dctVector[i]));
+                    Mat hist;
+                    computeHistogram(norm_0_255(dctVector[i]), hist);
+                    imwrite("ImageRes/blockdct_histo_"+ std::to_string(i) +".jpg", displayHistogram(hist));
+
+                }
+
+                imwrite("ImageRes/blockidct_result.jpg", finalImg);
+
+                std::cout << "Finished" << '\n';
+
+            }
+
             dctVector.clear();
             idctVector.clear();
             finalImg.release();
+            finalImgVector.clear();
 
             break;
         }
@@ -625,17 +712,14 @@ int main(int argc, char** argv){
             std::vector<Mat> dctVector;
             computeBlockDCT(imgVector, dctVector);
 
-            std::vector<Mat> modDdctVector;
-            applyBlockMask(dctVector, modDdctVector);
+            std::vector<Mat> modDctVector;
+            applyBlockMask(dctVector, modDctVector);
 
-            visualizeDCT(modDdctVector);
-            visualizeDCTHistograms(modDdctVector);
+            visualizeDCT(modDctVector);
+            visualizeDCTHistograms(modDctVector);
 
             std::vector<Mat> idctVector;
-            computeInverseBlockDCT(modDdctVector, idctVector);
-
-            std::cout << "EQM : " << eqm(imgVector[0], idctVector[0]) << std::endl;
-            std::cout << "PSNR : " << psnr(imgVector[0], idctVector[0]) << std::endl;
+            computeInverseBlockDCT(modDctVector, idctVector);
 
             Mat finalImg;
             merge(idctVector, finalImg);
@@ -644,9 +728,37 @@ int main(int argc, char** argv){
             imshow("IDCT", finalImg);
             waitKey();
 
+            std::vector<Mat> finalImgVector;
+            split(finalImg, finalImgVector);
+
+            std::cout << "EQM : " << eqm(srcVector[0], finalImgVector[0]) << std::endl;
+            std::cout << "PSNR : " << psnr(srcVector[0], finalImgVector[0]) << std::endl;
+
+            if (save) {
+                std::cout << "Saving..." << '\n';
+
+                for (int i = 0; i < 3; i++) {
+                    imwrite("ImageRes/blockdct_masked_"+ std::to_string(i) +".jpg", visualizeDCT(modDctVector[i]));
+                    Mat hist;
+                    computeHistogram(norm_0_255(modDctVector[i]), hist);
+                    imwrite("ImageRes/blockdct_masked_histo_"+ std::to_string(i) +".jpg", displayHistogram(hist));
+
+                }
+
+                imwrite("ImageRes/blockidct_masked_result.jpg", finalImg);
+
+                Mat distoMap;
+                distortionMap(srcVector, finalImgVector, distoMap);
+                imwrite("ImageRes/blockidct_masked_disto.jpg", distoMap);
+
+                std::cout << "Finished" << '\n';
+
+            }
+
             dctVector.clear();
             idctVector.clear();
             finalImg.release();
+            finalImgVector.clear();
 
             break;
         }
@@ -656,20 +768,17 @@ int main(int argc, char** argv){
             std::vector<Mat> dctVector;
             computeBlockDCT(imgVector, dctVector);
 
-            std::vector<Mat> modDdctVector;
-            applyBlockTransform(dctVector, modDdctVector);
+            std::vector<Mat> modDctVector;
+            applyBlockTransform(dctVector, modDctVector);
 
-            visualizeDCT(modDdctVector);
-            visualizeDCTHistograms(modDdctVector);
+            visualizeDCT(modDctVector);
+            visualizeDCTHistograms(modDctVector);
 
-            std::vector<Mat> iModDdctVector;
-            applyInverseBlockTransform(modDdctVector, iModDdctVector);
+            std::vector<Mat> iModDctVector;
+            applyInverseBlockTransform(modDctVector, iModDctVector);
 
             std::vector<Mat> idctVector;
-            computeInverseBlockDCT(iModDdctVector, idctVector);
-
-            std::cout << "EQM : " << eqm(imgVector[0], idctVector[0]) << std::endl;
-            std::cout << "PSNR : " << psnr(imgVector[0], idctVector[0]) << std::endl;
+            computeInverseBlockDCT(iModDctVector, idctVector);
 
             Mat finalImg;
             merge(idctVector, finalImg);
@@ -678,9 +787,37 @@ int main(int argc, char** argv){
             imshow("IDCT", finalImg);
             waitKey();
 
+            std::vector<Mat> finalImgVector;
+            split(finalImg, finalImgVector);
+
+            std::cout << "EQM : " << eqm(srcVector[0], finalImgVector[0]) << std::endl;
+            std::cout << "PSNR : " << psnr(srcVector[0], finalImgVector[0]) << std::endl;
+
+            if (save) {
+                std::cout << "Saving..." << '\n';
+
+                for (int i = 0; i < 3; i++) {
+                    imwrite("ImageRes/blockdct_transform_"+ std::to_string(i) +".jpg", visualizeDCT(modDctVector[i]));
+                    Mat hist;
+                    computeHistogram(norm_0_255(modDctVector[i]), hist);
+                    imwrite("ImageRes/blockdct_transform_histo_"+ std::to_string(i) +".jpg", displayHistogram(hist));
+
+                }
+
+                imwrite("ImageRes/blockidct_transform_result.jpg", finalImg);
+
+                Mat distoMap;
+                distortionMap(srcVector, finalImgVector, distoMap);
+                imwrite("ImageRes/blockidct_transform_disto.jpg", distoMap);
+
+                std::cout << "Finished" << '\n';
+
+            }
+
             dctVector.clear();
             idctVector.clear();
             finalImg.release();
+            finalImgVector.clear();
 
             break;
         }
