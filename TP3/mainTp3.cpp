@@ -116,14 +116,18 @@ Mat norm_0_255(InputArray _src) {
 //=======================================================================================
 // EQM
 //=======================================================================================
-double eqm(const Mat & img1, const Mat & img2)
+float eqm(const Mat & img1, const Mat & img2)
 {
 	assert(img1.cols == img2.cols && img1.rows == img2.rows);
-	double result = 0;
+	float result = 0;
 	for(int i = 0; i < img1.rows; i++) {
 		for(int j = 0; j < img1.cols; j++) {
-			double pixel1 = (double) img1.at<unsigned char>(i, j);
-			double pixel2 = (double) img2.at<unsigned char>(i, j);
+			float pixel1 =  img1.at<float>(i, j);
+			float pixel2 =  img2.at<float>(i, j);
+			if(pixel1 != pixel2)
+			{
+				std::cout << "pixel 1 : " << pixel1 << "pixel 2 : " << pixel2 << std::endl;
+			}
 			result += ( pixel1 - pixel2) * (pixel1 - pixel2);
 
 		}
@@ -134,7 +138,7 @@ double eqm(const Mat & img1, const Mat & img2)
 //=======================================================================================
 // psnr
 //=======================================================================================
-double psnr(const Mat & imgSrc, const Mat & imgDeg)
+float psnr(const Mat & imgSrc, const Mat & imgDeg)
 {
 	assert(imgSrc.cols == imgDeg.cols && imgSrc.rows == imgDeg.rows);
 	// d c'est la dynamique = ensemble des valeurs possibles par pixel
@@ -180,8 +184,9 @@ std::vector<Mat>  recupImage(int argc, char** argv)
     		std::cout <<  "Could not open or find the image " << argv[1] << std::endl ;
 			waitKey(0); // Wait for a keystroke in the window
  		 }
- 		inputImage.convertTo(inputImage, CV_32FC3);
-		images.push_back(inputImage);
+ 		Mat imgFloat(inputImage.size(), CV_32FC3);
+ 		inputImage.convertTo(imgFloat, CV_32FC3);
+		images.push_back(imgFloat);
 	}
 	return images;
 }
@@ -271,9 +276,8 @@ float MICDA(const Mat & img, int i, int j)
 //=======================================================================================
 // Coding
 //=======================================================================================
-Mat coding(const Mat & img, int choixPredi, int choixQuantif = 1)
+void coding(const Mat & img, Mat & imgPred, int choixPredi, int choixQuantif = 1)
 {
-	Mat imgPred(img.rows,img.cols,CV_32FC1);
 	Mat imgDecode(img.rows,img.cols,CV_32FC1);
 
 	int prediction;
@@ -311,16 +315,13 @@ Mat coding(const Mat & img, int choixPredi, int choixQuantif = 1)
 			imgPred.at<float>(i,j) += 128;
 		}
 	}
-
-	return imgPred; 
 }
 
 //=======================================================================================
 // Decoding
 //=======================================================================================
-Mat decoding( Mat & img, int choixPredi, int choixQuantif = 0)
+void decoding( Mat & img, Mat & imgDecode, int choixPredi, int choixQuantif = 1)
 {
-	Mat imgDecode(img.rows,img.cols,CV_32FC1);
 
 	int prediction;
 
@@ -351,11 +352,80 @@ Mat decoding( Mat & img, int choixPredi, int choixQuantif = 0)
 					prediction = MICD_mono(imgDecode,i,j);
 					break;
 			}
-			imgDecode.at<float>(i,j) = dequantif(img.at<float>(i,j)) + prediction ;
+			imgDecode.at<float>(i,j) = choixQuantif*img.at<float>(i,j) + prediction ;
+		}
+	}
+}
+
+
+//=======================================================================================
+// Coding
+//=======================================================================================
+void codingCompetitif(const Mat & img, Mat & erreur, Mat & imgPred ,int choixPredi, int choixQuantif = 1)
+{
+	Mat imgDecode(img.rows,img.cols,CV_32FC1);
+
+	int prediction;
+	int predictionDequantif;
+
+	for(int i =0; i < imgPred.rows; ++i)
+	{
+		for(int j = 0; j < imgPred.cols; ++j)
+		{
+ 			
+			imgPred.at<float>(i,j) = floor((img.at<float>(i,j) - prediction)/choixQuantif + 0.5);
+			predictionDequantif = imgPred.at<float>(i,j) * choixQuantif;		
+			imgDecode.at<float>(i,j) = predictionDequantif + prediction;
 		}
 	}
 
-	return imgDecode; 
+	for(int i =0; i < imgPred.rows; ++i)
+	{
+		for(int j = 0; j < imgPred.cols; ++j)
+		{
+			imgPred.at<float>(i,j) += 128;
+		}
+	}
+}
+
+//=======================================================================================
+// Decoding
+//=======================================================================================
+Mat decodingCompetitif(Mat & img, Mat & erreur,Mat & imgDecode, int choixPredi, int choixQuantif = 0)
+{
+
+	int prediction;
+
+	for(int i =0; i < img.rows; ++i)
+	{
+		for(int j = 0; j < img.cols; ++j)
+		{
+			img.at<float>(i,j) = img.at<float>(i,j) - 128;
+		}
+	}
+
+	for(int i =0; i < img.rows; i++)
+	{
+		for(int j = 0; j < img.cols; j++)
+		{
+			switch(choixPredi)
+			{
+				case 1:
+					prediction = MICD_mono(imgDecode,i,j);
+					break;
+				case 2:
+					prediction = MICD_bi(imgDecode,i,j);
+					break;
+				case 3:
+					prediction = MICDA(imgDecode,i,j);
+					break;
+				default :
+					prediction = MICD_mono(imgDecode,i,j);
+					break;
+			}
+			imgDecode.at<float>(i,j) = choixQuantif * img.at<float>(i,j) + prediction ;
+		}
+	}
 }
 
 //=======================================================================================
@@ -366,11 +436,14 @@ void boucleOuverteSimple(const std::vector<Mat> & imagesSplit)
 	std::cout<< "-------- Codage des images --------" << std::endl;
 
 	std::vector<Mat> imagesCodees;
+
+	int choixPredi;
+	int choixQuantif;
+
 	for (int i = 0; i < imagesSplit.size(); i++)
 	{
 		std::cout << "Entropy de l'image originale : " << computeEntropy(imagesSplit[i]) << "\n" << std::endl;
 
-		int choixPredi;
 		std::cout << "Choisissez le prédicteur : " << std::endl;
 		std::cout << " 1 : MICD_mono " << std::endl;
 		std::cout << " 2 : MICD_bi " << std::endl;
@@ -379,20 +452,22 @@ void boucleOuverteSimple(const std::vector<Mat> & imagesSplit)
 
 		std::cout << "\n";
 
-		int choixQuantif;
 		std::cout << "Choisissez le pas de quantification (1,2,4,6,...): " << std::endl;
 		std::cin >> choixQuantif;
 
-		imagesCodees.push_back(coding(imagesSplit[i],choixPredi,choixQuantif));
-		imwrite ( "ImageRes/Image"+ intToString(i)+ "codee" +".jpg" , imagesCodees[i]);
+		imwrite ( "ImageRes/Image"+ intToString(i)+ "originale" +".jpg" , imagesSplit[i]);
 
+		Mat imgPred(imagesSplit[i].rows,imagesSplit[i].cols,CV_32FC1);
+		coding(imagesSplit[i], imgPred,choixPredi,choixQuantif);
+
+		imagesCodees.push_back(imgPred);
+		imwrite ( "ImageRes/Image"+ intToString(i)+ "codee" +".jpg" , imagesCodees[i]);
 
 		std::cout<< "-------- Histogramme carte d'erreur --------" << std::endl;
 		Mat histogram;
 		computeHistogram(imagesCodees[i],histogram);
 		imwrite("ImageRes/HistogrammeErreur"+ intToString(i) +".jpg", displayHistogram(histogram));
 		std::cout << "Entropy de l'erreur : " << computeEntropy(imagesCodees[i]) << "\n" << std::endl;
-
 	}
 
 	std::cout<< "-------- Decodage des images --------" << std::endl;
@@ -400,10 +475,14 @@ void boucleOuverteSimple(const std::vector<Mat> & imagesSplit)
 	std::vector<Mat> imagesDecodees;
 	for (int i = 0; i < imagesSplit.size(); i++)
 	{
-		imagesDecodees.push_back(decoding(imagesCodees[i],1));
+		Mat imgDecode(imagesCodees[i].rows,imagesCodees[i].cols,CV_32FC1);
+		decoding(imagesCodees[i], imgDecode,choixPredi, choixQuantif);
+
+		imagesDecodees.push_back(imgDecode);
 		imwrite ( "ImageRes/Image"+ intToString(i)+ "decodee" +".jpg" , imagesDecodees[i]);
 
 		std::cout<< "-------- Calcul du PSNR --------" << std::endl;
+		std::cout << "EQM : " << eqm(imagesSplit[i],imagesDecodees[i]) << std::endl;
 		std::cout << "PSNR : " << psnr(imagesSplit[i],imagesDecodees[i]) << std::endl;
 	}
 }
@@ -415,49 +494,7 @@ void boucleOuverteSimple(const std::vector<Mat> & imagesSplit)
 //=======================================================================================
 void boucleOuverteCompetition(const std::vector<Mat> & imagesSplit)
 {
-	std::cout<< "-------- Codage des images --------" << std::endl;
-
-	std::vector<Mat> imagesCodees;
-	for (int i = 0; i < imagesSplit.size(); i++)
-	{
-		std::cout << "Entropy de l'image originale : " << computeEntropy(imagesSplit[i]) << "\n" << std::endl;
-
-		int choixPredi;
-		std::cout << "Choisissez le prédicteur : " << std::endl;
-		std::cout << " 1 : MICD_mono " << std::endl;
-		std::cout << " 2 : MICD_bi " << std::endl;
-		std::cout << " 3 : MICDA " << std::endl;
-		std::cin >> choixPredi;
-
-		std::cout << "\n";
-
-		int choixQuantif;
-		std::cout << "Choisissez le pas de quantification (1,2,4,6,...): " << std::endl;
-		std::cin >> choixQuantif;
-
-		imagesCodees.push_back(coding(imagesSplit[i],choixPredi,choixQuantif));
-		imwrite ( "ImageRes/Image"+ intToString(i)+ "codee" +".jpg" , imagesCodees[i]);
-
-
-		std::cout<< "-------- Histogramme carte d'erreur --------" << std::endl;
-		Mat histogram;
-		computeHistogram(imagesCodees[i],histogram);
-		imwrite("ImageRes/HistogrammeErreur"+ intToString(i) +".jpg", displayHistogram(histogram));
-		std::cout << "Entropy de l'erreur : " << computeEntropy(imagesCodees[i]) << "\n" << std::endl;
-
-	}
-
-	std::cout<< "-------- Decodage des images --------" << std::endl;
-
-	std::vector<Mat> imagesDecodees;
-	for (int i = 0; i < imagesSplit.size(); i++)
-	{
-		imagesDecodees.push_back(decoding(imagesCodees[i],1));
-		imwrite ( "ImageRes/Image"+ intToString(i)+ "decodee" +".jpg" , imagesDecodees[i]);
-
-		std::cout<< "-------- Calcul du PSNR --------" << std::endl;
-		std::cout << "PSNR : " << psnr(imagesSplit[i],imagesDecodees[i]) << std::endl;
-	}
+	
 }
 
 //=======================================================================================
@@ -477,7 +514,6 @@ int main(int argc, char** argv){
 	std::vector<Mat> imagesBGR = recupImage(argc, argv);
 	std::vector<Mat> imagesYCrCb;
 
-
   	// Conversion en YCrCb
   	for(int i = 0; i < imagesBGR.size() ; i++)
 	{
@@ -492,7 +528,22 @@ int main(int argc, char** argv){
 	for(int i = 0; i < imagesYCrCb.size(); i++)
 	{
 		std::vector<Mat> imgSplit;
-		split(imagesYCrCb[i],imgSplit);
+
+		Mat imgFloat(imagesYCrCb[0].size(),CV_32FC3);
+		imagesYCrCb[0].convertTo(imgFloat,CV_32FC3);
+
+		split(imgFloat,imgSplit);
+
+		for(int i =0; i < imgFloat.rows; ++i)
+		{
+			for(int j = 0; j < imgFloat.cols; ++j)
+			{
+				std::cout << imgSplit[0].at<float>(i,j)  << std::endl;
+			}
+		}
+
+
+
 		imagesSplit.push_back(imgSplit[0]);
 	}
 
