@@ -12,7 +12,6 @@
 
 using namespace cv;
 
-
 //=======================================================================================
 // convert int into string
 //=======================================================================================
@@ -22,6 +21,26 @@ string intToString(int i) // convert int to string
     std::stringstream value;
     value << i;
     return value.str();
+}
+
+
+string savoirPredi(int i) // convert int to string
+{
+    switch(i)
+			{
+				case 1:
+					return "MICDmono";
+					break;
+				case 2:
+					return "MICDbi";
+					break;
+				case 3:
+					return "MICDA";
+					break;	
+				default :
+					return "MICDmono";
+					break;
+	}
 }
 
 //=======================================================================================
@@ -124,10 +143,6 @@ float eqm(const Mat & img1, const Mat & img2)
 		for(int j = 0; j < img1.cols; j++) {
 			float pixel1 =  img1.at<float>(i, j);
 			float pixel2 =  img2.at<float>(i, j);
-			if(pixel1 != pixel2)
-			{
-				std::cout << "pixel 1 : " << pixel1 << "pixel 2 : " << pixel2 << std::endl;
-			}
 			result += ( pixel1 - pixel2) * (pixel1 - pixel2);
 
 		}
@@ -184,9 +199,7 @@ std::vector<Mat>  recupImage(int argc, char** argv)
     		std::cout <<  "Could not open or find the image " << argv[1] << std::endl ;
 			waitKey(0); // Wait for a keystroke in the window
  		 }
- 		Mat imgFloat(inputImage.size(), CV_32FC3);
- 		inputImage.convertTo(imgFloat, CV_32FC3);
-		images.push_back(imgFloat);
+		images.push_back(inputImage);
 	}
 	return images;
 }
@@ -283,6 +296,22 @@ void coding(const Mat & img, Mat & imgPred, int choixPredi, int choixQuantif = 1
 	int prediction;
 	int predictionDequantif;
 
+	switch(choixPredi)
+			{
+				case 1:
+					std::cout << "-------- MICD_mono --------" << std::endl;
+					break;
+				case 2:
+					std::cout << "-------- MICD_bi --------" << std::endl;
+					break;
+				case 3:
+					std::cout << "-------- MICDA --------" << std::endl;
+					break;	
+				default :
+					std::cout << "-------- MICD_mono --------" << std::endl;
+					break;
+	}
+
 	for(int i =0; i < imgPred.rows; ++i)
 	{
 		for(int j = 0; j < imgPred.cols; ++j)
@@ -361,7 +390,7 @@ void decoding( Mat & img, Mat & imgDecode, int choixPredi, int choixQuantif = 1)
 //=======================================================================================
 // Coding
 //=======================================================================================
-void codingCompetitif(const Mat & img, Mat & erreur, Mat & imgPred ,int choixPredi, int choixQuantif = 1)
+void codingCompetitif(const Mat & img, Mat & erreur, Mat & imgPred , int choixQuantif = 1)
 {
 	Mat imgDecode(img.rows,img.cols,CV_32FC1);
 
@@ -372,6 +401,28 @@ void codingCompetitif(const Mat & img, Mat & erreur, Mat & imgPred ,int choixPre
 	{
 		for(int j = 0; j < imgPred.cols; ++j)
 		{
+ 			int mono = MICD_mono(imgDecode,i,j);
+ 			int bi = MICD_bi(imgDecode,i,j);
+ 			int micda = MICDA(imgDecode,i,j);
+ 			int absmono = abs(img.at<float>(i,j) - mono);
+ 			int absbi = abs(img.at<float>(i,j) - bi);
+ 			int absmicda = abs(img.at<float>(i,j) - micda);
+ 			
+ 			if(absmono < absbi && absmono < absmicda)
+ 			{
+ 				prediction = MICD_mono(imgDecode,i,j);
+				erreur.at<float>(i,j) = 1;
+ 			}
+ 			else if(absbi < absmicda)
+ 			{
+ 				prediction = MICD_bi(imgDecode,i,j);
+				erreur.at<float>(i,j) = 2;
+ 			}
+ 			else
+ 			{
+ 				prediction = MICDA(imgDecode,i,j);
+				erreur.at<float>(i,j) = 3;
+ 			}
  			
 			imgPred.at<float>(i,j) = floor((img.at<float>(i,j) - prediction)/choixQuantif + 0.5);
 			predictionDequantif = imgPred.at<float>(i,j) * choixQuantif;		
@@ -391,7 +442,7 @@ void codingCompetitif(const Mat & img, Mat & erreur, Mat & imgPred ,int choixPre
 //=======================================================================================
 // Decoding
 //=======================================================================================
-Mat decodingCompetitif(Mat & img, Mat & erreur,Mat & imgDecode, int choixPredi, int choixQuantif = 0)
+void decodingCompetitif(Mat & img, Mat & erreur,Mat & imgDecode, int choixQuantif = 1)
 {
 
 	int prediction;
@@ -408,22 +459,23 @@ Mat decodingCompetitif(Mat & img, Mat & erreur,Mat & imgDecode, int choixPredi, 
 	{
 		for(int j = 0; j < img.cols; j++)
 		{
-			switch(choixPredi)
+
+			if( erreur.at<float>(i,j) == 1)
 			{
-				case 1:
-					prediction = MICD_mono(imgDecode,i,j);
-					break;
-				case 2:
-					prediction = MICD_bi(imgDecode,i,j);
-					break;
-				case 3:
-					prediction = MICDA(imgDecode,i,j);
-					break;
-				default :
-					prediction = MICD_mono(imgDecode,i,j);
-					break;
+				prediction = MICD_mono(imgDecode,i,j);
 			}
+			else if (erreur.at<float>(i,j) == 2)
+			{
+				prediction = MICD_bi(imgDecode,i,j);
+			}
+			else
+			{
+				prediction = MICDA(imgDecode,i,j);
+			}
+
+
 			imgDecode.at<float>(i,j) = choixQuantif * img.at<float>(i,j) + prediction ;
+
 		}
 	}
 }
@@ -431,60 +483,45 @@ Mat decodingCompetitif(Mat & img, Mat & erreur,Mat & imgDecode, int choixPredi, 
 //=======================================================================================
 // Boucle ouverte simple
 //=======================================================================================
-void boucleOuverteSimple(const std::vector<Mat> & imagesSplit)
+void boucleOuverteSimple(const Mat & imagesSplit)
 {
-	std::cout<< "-------- Codage des images --------" << std::endl;
+	std::cout<< "-------- Codage des images --------" << "\n \n" << std::endl;
 
-	std::vector<Mat> imagesCodees;
+	Mat imagesCodees;
 
-	int choixPredi;
 	int choixQuantif;
+	std::cout << "Choix pas de Quantif" << std::endl;
+	std::cin >> choixQuantif;
 
-	for (int i = 0; i < imagesSplit.size(); i++)
+	imwrite ( "ImageRes/Imageoriginale.jpg" , imagesSplit);
+
+	for(int choixPredi = 1; choixPredi < 4; choixPredi++)
 	{
-		std::cout << "Entropy de l'image originale : " << computeEntropy(imagesSplit[i]) << "\n" << std::endl;
 
-		std::cout << "Choisissez le prédicteur : " << std::endl;
-		std::cout << " 1 : MICD_mono " << std::endl;
-		std::cout << " 2 : MICD_bi " << std::endl;
-		std::cout << " 3 : MICDA " << std::endl;
-		std::cin >> choixPredi;
+		Mat imgPred(imagesSplit.rows,imagesSplit.cols,CV_32FC1);
+		coding(imagesSplit, imgPred,choixPredi,choixQuantif);
 
-		std::cout << "\n";
-
-		std::cout << "Choisissez le pas de quantification (1,2,4,6,...): " << std::endl;
-		std::cin >> choixQuantif;
-
-		imwrite ( "ImageRes/Image"+ intToString(i)+ "originale" +".jpg" , imagesSplit[i]);
-
-		Mat imgPred(imagesSplit[i].rows,imagesSplit[i].cols,CV_32FC1);
-		coding(imagesSplit[i], imgPred,choixPredi,choixQuantif);
-
-		imagesCodees.push_back(imgPred);
-		imwrite ( "ImageRes/Image"+ intToString(i)+ "codee" +".jpg" , imagesCodees[i]);
+		imwrite ( "ImageRes/Imagecodee"+ savoirPredi(choixPredi) + "Q" + intToString(choixQuantif) +".jpg" , imgPred);
 
 		std::cout<< "-------- Histogramme carte d'erreur --------" << std::endl;
 		Mat histogram;
-		computeHistogram(imagesCodees[i],histogram);
-		imwrite("ImageRes/HistogrammeErreur"+ intToString(i) +".jpg", displayHistogram(histogram));
-		std::cout << "Entropy de l'erreur : " << computeEntropy(imagesCodees[i]) << "\n" << std::endl;
-	}
+		computeHistogram(imgPred,histogram);
+		imwrite("ImageRes/HistogrammeErreur"+ savoirPredi(choixPredi) +"Q" + intToString(choixQuantif) +".jpg", displayHistogram(histogram));
+		std::cout << "Entropie de l'erreur : " << computeEntropy(imgPred) << std::endl;
 
-	std::cout<< "-------- Decodage des images --------" << std::endl;
 
-	std::vector<Mat> imagesDecodees;
-	for (int i = 0; i < imagesSplit.size(); i++)
-	{
-		Mat imgDecode(imagesCodees[i].rows,imagesCodees[i].cols,CV_32FC1);
-		decoding(imagesCodees[i], imgDecode,choixPredi, choixQuantif);
+		std::cout<< "-------- Decodage des images --------" << std::endl;
 
-		imagesDecodees.push_back(imgDecode);
-		imwrite ( "ImageRes/Image"+ intToString(i)+ "decodee" +".jpg" , imagesDecodees[i]);
+		Mat imgDecode(imgPred.rows,imgPred.cols,CV_32FC1);
+		decoding(imgPred, imgDecode,choixPredi, choixQuantif);
+
+		imwrite ( "ImageRes/Imagedecodee"+ savoirPredi(choixPredi) +"Q" + intToString(choixQuantif) +".jpg" , imgDecode);
 
 		std::cout<< "-------- Calcul du PSNR --------" << std::endl;
-		std::cout << "EQM : " << eqm(imagesSplit[i],imagesDecodees[i]) << std::endl;
-		std::cout << "PSNR : " << psnr(imagesSplit[i],imagesDecodees[i]) << std::endl;
+		std::cout << "EQM : " << eqm(imagesSplit,imgDecode) << std::endl;
+		std::cout << "PSNR : " << psnr(imagesSplit,imgDecode) << "\n \n" << std::endl;
 	}
+
 }
 
 
@@ -492,8 +529,41 @@ void boucleOuverteSimple(const std::vector<Mat> & imagesSplit)
 //=======================================================================================
 // Boucle ouverte avec compétition
 //=======================================================================================
-void boucleOuverteCompetition(const std::vector<Mat> & imagesSplit)
+void boucleOuverteCompetition(const Mat & imagesSplit)
 {
+	std::cout<< "-------- Codage des images --------" << "\n \n" << std::endl;
+
+	Mat imagesCodees;
+
+	int choixQuantif;
+	std::cout << "Choix pas de Quantif" << std::endl;
+	std::cin >> choixQuantif;
+
+	imwrite ( "ImageRes/Imageoriginale.jpg" , imagesSplit);
+
+	Mat imgPred(imagesSplit.rows,imagesSplit.cols,CV_32FC1);
+	Mat imgErreur(imagesSplit.rows,imagesSplit.cols,CV_32FC1);
+	codingCompetitif(imagesSplit,imgErreur, imgPred,choixQuantif);
+
+	imwrite ( "ImageRes/ImagecodeeCompetitifQ" + intToString(choixQuantif) +".jpg" , imgPred);
+
+	std::cout<< "-------- Histogramme carte d'erreur --------" << std::endl;
+	Mat histogram;
+	computeHistogram(imgPred,histogram);
+	imwrite("ImageRes/HistogrammeErreurCompetitifQ" + intToString(choixQuantif) +".jpg", displayHistogram(histogram));
+	std::cout << "Entropie de l'erreur : " << computeEntropy(imgPred) << std::endl;
+
+
+	std::cout<< "-------- Decodage des images --------" << std::endl;
+
+	Mat imgDecode(imagesSplit.rows,imagesSplit.cols,CV_32FC1);
+	decodingCompetitif(imgPred, imgErreur, imgDecode, choixQuantif);
+
+	imwrite ( "ImageRes/ImagedecodeeCompetitifQ" + intToString(choixQuantif) +".jpg" , imgDecode);
+
+	std::cout<< "-------- Calcul du PSNR --------" << std::endl;
+	std::cout << "EQM : " << eqm(imagesSplit,imgDecode) << std::endl;
+	std::cout << "PSNR : " << psnr(imagesSplit,imgDecode) << "\n \n" << std::endl;
 	
 }
 
@@ -505,49 +575,36 @@ void boucleOuverteCompetition(const std::vector<Mat> & imagesSplit)
 int main(int argc, char** argv){
 
 	if (argc < 2){
-	    std::cout << "No image data... At least one argument is required! \n";
+	    std::cout << "Chtouloulou je suis un message! No image data... At least one argument is required! \n";
 	    return -1;
 	}
 
 	std::cout<< "--------Récupération Image--------" << std::endl;
 
-	std::vector<Mat> imagesBGR = recupImage(argc, argv);
-	std::vector<Mat> imagesYCrCb;
+	Mat imagesBGR;
+
+	imagesBGR = imread(argv[1], CV_LOAD_IMAGE_COLOR);
+	if(!imagesBGR.data ) { // Check for invalid input
+    	std::cout <<  "On m'appelle l'ovni ! Could not open or find the image " << argv[1] << std::endl ;
+		waitKey(0); // Wait for a keystroke in the window
+ 	}
+
+	Mat imagesYCrCb;
 
   	// Conversion en YCrCb
-  	for(int i = 0; i < imagesBGR.size() ; i++)
-	{
-		Mat imgYCrCb;
-		BGRtoYCrCb(imagesBGR[i],imgYCrCb);
-		imagesYCrCb.push_back(imgYCrCb);
-	}
+	Mat imgYCrCb;
+	BGRtoYCrCb(imagesBGR,imgYCrCb);
+
+	Mat imgYCrCb32F(imagesBGR.size(),CV_32FC3);
+	imgYCrCb.convertTo(imgYCrCb32F,CV_32FC3);
 
 	std::cout<< "--------Split des Images--------" << std::endl;
 
-	std::vector<Mat> imagesSplit;
-	for(int i = 0; i < imagesYCrCb.size(); i++)
-	{
-		std::vector<Mat> imgSplit;
+	std::vector<Mat> imgSplit;
+	split(imgYCrCb32F,imgSplit);
 
-		Mat imgFloat(imagesYCrCb[0].size(),CV_32FC3);
-		imagesYCrCb[0].convertTo(imgFloat,CV_32FC3);
-
-		split(imgFloat,imgSplit);
-
-		for(int i =0; i < imgFloat.rows; ++i)
-		{
-			for(int j = 0; j < imgFloat.cols; ++j)
-			{
-				std::cout << imgSplit[0].at<float>(i,j)  << std::endl;
-			}
-		}
-
-
-
-		imagesSplit.push_back(imgSplit[0]);
-	}
-
-	boucleOuverteSimple(imagesSplit);
+	boucleOuverteSimple(imgSplit[0]);
+	boucleOuverteCompetition(imgSplit[0]);
 
 
   return 0;
