@@ -1,0 +1,18 @@
+\select@language {french}
+\contentsline {figure}{\numberline {1}{\ignorespaces Image originale en couleur}}{4}
+\contentsline {figure}{\numberline {2}{\ignorespaces Image originale (uniquement le canal Y)}}{4}
+\contentsline {figure}{\numberline {3}{\ignorespaces Erreur avec la pr\IeC {\'e}diction MICD mono}}{5}
+\contentsline {figure}{\numberline {4}{\ignorespaces Erreur avec la pr\IeC {\'e}diction MICD bi}}{5}
+\contentsline {figure}{\numberline {5}{\ignorespaces Erreur avec la pr\IeC {\'e}diction MICDA}}{6}
+\contentsline {figure}{\numberline {6}{\ignorespaces Histogramme de l'erreur avec la pr\IeC {\'e}diction MICD mono}}{6}
+\contentsline {figure}{\numberline {7}{\ignorespaces Histogramme de l'erreur avec la pr\IeC {\'e}diction MICD bi}}{7}
+\contentsline {figure}{\numberline {8}{\ignorespaces Histogramme de l'erreur avec la pr\IeC {\'e}diction MICDA}}{7}
+\contentsline {figure}{\numberline {9}{\ignorespaces Erreur avec la pr\IeC {\'e}diction comp\IeC {\'e}titive}}{8}
+\contentsline {figure}{\numberline {10}{\ignorespaces Erreur avec la pr\IeC {\'e}diction comp\IeC {\'e}titive}}{8}
+\contentsline {figure}{\numberline {11}{\ignorespaces Comparaison des entropies}}{9}
+\contentsline {figure}{\numberline {12}{\ignorespaces Entropie en fonction du pas de quantification}}{10}
+\contentsline {figure}{\numberline {13}{\ignorespaces Images d\IeC {\'e}cod\IeC {\'e}es en MICD mono avec un pas de 2,8 et 32 }}{11}
+\contentsline {figure}{\numberline {14}{\ignorespaces Images d\IeC {\'e}cod\IeC {\'e}es en MICD bi avec un pas de 2,8 et 32 }}{11}
+\contentsline {figure}{\numberline {15}{\ignorespaces Images d\IeC {\'e}cod\IeC {\'e}es en MICDA avec un pas de 2,8 et 32 }}{11}
+\contentsline {figure}{\numberline {16}{\ignorespaces Images d\IeC {\'e}cod\IeC {\'e}es en comp\IeC {\'e}titif avec un pas de 2,8 et 32 }}{12}
+\contentsline {figure}{\numberline {17}{\ignorespaces PSNR en fonction du pas de quantification}}{12}

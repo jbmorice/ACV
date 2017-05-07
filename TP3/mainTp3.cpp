@@ -230,11 +230,11 @@ float MICD_bi(const Mat & img, int i, int j)
 	}
 	else if(i == 0)
 	{
-		return (128 + img.at<float>(i,j-1)/2);
+		return ((128 + img.at<float>(i,j-1))/2);
 	}
 	else if(j == 0)
 	{
-		return (128 + img.at<float>(i-1,j)/2);
+		return ((128 + img.at<float>(i-1,j))/2);
 	}
 	else
 	{
@@ -445,6 +445,8 @@ void codingCompetitif(const Mat & img, Mat & erreur, Mat & imgPred , int choixQu
 void decodingCompetitif(Mat & img, Mat & erreur,Mat & imgDecode, int choixQuantif = 1)
 {
 
+	std::cout << "Entropie du choix :" << computeEntropy(erreur) << std::endl;
+
 	int prediction;
 
 	for(int i =0; i < img.rows; ++i)
@@ -478,12 +480,14 @@ void decodingCompetitif(Mat & img, Mat & erreur,Mat & imgDecode, int choixQuanti
 
 		}
 	}
+
+	imwrite("ImageRes/erreur.jpg", norm_0_255(erreur));
 }
 
 //=======================================================================================
-// Boucle ouverte simple
+// Boucle fermee simple
 //=======================================================================================
-void boucleOuverteSimple(const Mat & imagesSplit)
+void boucleFermeeSimple(const Mat & imagesSplit)
 {
 	std::cout<< "-------- Codage des images --------" << "\n \n" << std::endl;
 
@@ -501,7 +505,7 @@ void boucleOuverteSimple(const Mat & imagesSplit)
 		Mat imgPred(imagesSplit.rows,imagesSplit.cols,CV_32FC1);
 		coding(imagesSplit, imgPred,choixPredi,choixQuantif);
 
-		imwrite ( "ImageRes/Imagecodee"+ savoirPredi(choixPredi) + "Q" + intToString(choixQuantif) +".jpg" , imgPred);
+		imwrite ( "ImageRes/Imagecodee"+ savoirPredi(choixPredi) + "Q" + intToString(choixQuantif) +".jpg" , norm_0_255(imgPred));
 
 		std::cout<< "-------- Histogramme carte d'erreur --------" << std::endl;
 		Mat histogram;
@@ -527,9 +531,9 @@ void boucleOuverteSimple(const Mat & imagesSplit)
 
 
 //=======================================================================================
-// Boucle ouverte avec compétition
+// Boucle fermee avec compétition
 //=======================================================================================
-void boucleOuverteCompetition(const Mat & imagesSplit)
+void boucleFermeeCompetition(const Mat & imagesSplit)
 {
 	std::cout<< "-------- Codage des images --------" << "\n \n" << std::endl;
 
@@ -545,7 +549,7 @@ void boucleOuverteCompetition(const Mat & imagesSplit)
 	Mat imgErreur(imagesSplit.rows,imagesSplit.cols,CV_32FC1);
 	codingCompetitif(imagesSplit,imgErreur, imgPred,choixQuantif);
 
-	imwrite ( "ImageRes/ImagecodeeCompetitifQ" + intToString(choixQuantif) +".jpg" , imgPred);
+	imwrite ( "ImageRes/ImagecodeeCompetitifQ" + intToString(choixQuantif) +".jpg" , norm_0_255(imgPred));
 
 	std::cout<< "-------- Histogramme carte d'erreur --------" << std::endl;
 	Mat histogram;
@@ -575,7 +579,7 @@ void boucleOuverteCompetition(const Mat & imagesSplit)
 int main(int argc, char** argv){
 
 	if (argc < 2){
-	    std::cout << "Chtouloulou je suis un message! No image data... At least one argument is required! \n";
+	    std::cout << "No image data... At least one argument is required! \n";
 	    return -1;
 	}
 
@@ -585,7 +589,7 @@ int main(int argc, char** argv){
 
 	imagesBGR = imread(argv[1], CV_LOAD_IMAGE_COLOR);
 	if(!imagesBGR.data ) { // Check for invalid input
-    	std::cout <<  "On m'appelle l'ovni ! Could not open or find the image " << argv[1] << std::endl ;
+    	std::cout <<  "Could not open or find the image " << argv[1] << std::endl ;
 		waitKey(0); // Wait for a keystroke in the window
  	}
 
@@ -603,8 +607,10 @@ int main(int argc, char** argv){
 	std::vector<Mat> imgSplit;
 	split(imgYCrCb32F,imgSplit);
 
-	boucleOuverteSimple(imgSplit[0]);
-	boucleOuverteCompetition(imgSplit[0]);
+	std::cout << "Entropie de l'image originale : " << computeEntropy(imgSplit[0]) << std::endl;
+
+	boucleFermeeSimple(imgSplit[0]);
+	boucleFermeeCompetition(imgSplit[0]);
 
 
   return 0;
