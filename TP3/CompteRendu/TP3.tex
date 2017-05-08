@@ -64,7 +64,7 @@
 \newpage
 \section*{Introduction}
 
-Le but de ce TP était de nous faire réaliser un  codeur basé sur du codage prédictif en boucle fermée. Pour mettre en place cette boucle nous avons aussi réalisé différents codeur tel que le MIC Différentiel ( monodirectionnel et bidirectionnel) et le MICD Adaptatif. Leurs implémentations nous étaient fournies dans le sujet de notre TP. Nous devions de plus évaluer la performance des différents prédicteurs et aussi mettre en place un système de quantification uniforme.
+Le but de ce TP était de nous faire réaliser un codeur basé sur du codage prédictif en boucle fermée. Pour mettre en place cette boucle nous avons aussi réalisé différents codeurs tels que le MIC Différentiel (monodirectionnel et bidirectionnel) et le MICD Adaptatif. Leurs implémentations nous étaient fournies dans le sujet de notre TP. De plus, nous devions évaluer la performance des différents prédicteurs et aussi mettre en place un système de quantification uniforme.
 
 
 \newpage
@@ -72,19 +72,19 @@ Le but de ce TP était de nous faire réaliser un  codeur basé sur du codage pr
 
 \subsection{Étude de prédicteurs simples}
 
-Dans un premier temps, notre travail consisté en l'implémentation des différents codeurs cités plus haut (MICD mono, MICD bi et MICDA) et de réaliser une étude comparative des différents prédicteurs grâce notamment à l'histogramme de l'erreur de prédiction ou le calcul du PSNR de l'image décodée avec l'image originale de référence.
+Dans un premier temps, notre travail a consisté en l'implémentation des différents codeurs cités plus haut (MICD mono, MICD bi et MICDA) puis en la réalisation d'une étude comparative des différents prédicteurs, grâce notamment à l'histogramme de l'erreur de prédiction ou au calcul du PSNR de l'image décodée avec l'image originale de référence.
 
 \subsubsection{Choix des conditions aux bords}
 
-Pour la prédiction mono-dimensionnelle,  nous devons $P(X) = 128$ sur la première colonne. Pour les deux autres prédictions, on prendra aussi $P(X) = 128$ pour la première colonne et ligne. 
+Pour la prédiction mono-dimensionnelle,  nous prenons $P(X) = 128$ sur la première colonne. Pour les deux autres prédictions, on prendra aussi $P(X) = 128$ pour la première colonne et ligne. 
 
 \emph{Ce choix était-il pertinent ?}
 
-Le but de cette première prédiction est de minimiser l'erreur, c'est à dire de minimiser $E(i,j)$. Or, $E(i,j) = X(i,j) - X_p(i,j)$, il faut ainsi trouvé la valeur de $X(i,j)$ qui minimise cette opération, et cette valeur c'est la moyenne de $X(i,j)$ c'est à dire 128.
+Le but de cette première prédiction est de minimiser l'erreur, c'est à dire de minimiser $E(i,j)$. Or, $E(i,j) = X(i,j) - X_p(i,j)$, il faut ainsi trouver la valeur de $X(i,j)$ qui minimise cette opération, et cette valeur c'est la moyenne de $X(i,j)$ c'est à dire 128.
 
 \subsubsection{Performances des différents prédicteurs}
 
-Dans ce TP, nous devions encoder l'image \texttt{boat.bmp} présente ci-dessous. Pour se faire, nous avons seulement travaillé sur le canal Y de l'image comme sur les anciens TP. Cette image originale dispose d'une entropie de 6,69.
+Dans ce TP, nous devions encoder l'image \texttt{boat.bmp} présente ci-dessous. Pour ce faire, nous avons seulement travaillé sur le canal Y de l'image comme sur les anciens TP. Cette image originale dispose d'une entropie de 6,69.
 
 \begin{figure}[H]
 \begin{center}
@@ -101,7 +101,7 @@ Dans ce TP, nous devions encoder l'image \texttt{boat.bmp} présente ci-dessous.
 \end{figure}
 
 Dans un premier temps, nous avons appliqué les trois prédicteurs à l'image de base. Comme il n'y a pas de quantification, il n'y a pas de différence dans les images après qu'elles aient été décodée. Ainsi, on observe la différence entre les prédicteurs au niveau de l'erreur de prédiction transmise. 
-Ce que l'on observe sur les images ci-dessous utilisant le MICD monodirectionnel,MICD bidirectionnel et MIDCA, c'est que l'erreur ressemble énormément à ce que l'on peut obtenir avec un gradient (Ces images ont été normalisé pour les besoins du compte rendu). 
+Ce que l'on observe sur les images ci-dessous utilisant le MICD monodirectionnel, MICD bidirectionnel et MIDCA, c'est que l'erreur ressemble énormément à ce que l'on peut obtenir avec un gradient (ces images ont été normalisées pour les besoins du compte rendu). 
 
 \begin{figure}[H]
 \begin{center}
@@ -124,7 +124,7 @@ Ce que l'on observe sur les images ci-dessous utilisant le MICD monodirectionnel
 \end{center}
 \end{figure}
 
-Nous pouvons aussi constater sur les histogrammes que les différentes erreurs ont un histogramme plus ou moins semblable. Les différente méthodes nous donne aussi des entropies pour les images d'erreurs plus ou moins semblable allant de 4,8 pour le MICD monodirectionnel et le MIDCA à 4,7 pour le MICD bidirectionnel qui semble un peut plus performant. Ce que l'on peut observer c'est qu pour chacune de ces images d'erreur, l'entropie est largement plus faire que l'entropie de limage originale. Ainsi, le codage prédictif et le schéma en boucle fermée montre bien son utilisé sur une simple transmission de l'image.
+Nous pouvons aussi constater sur les histogrammes que les différentes erreurs ont un histogramme plus ou moins semblable. Les différentes méthodes nous donnent aussi des entropies pour les images d'erreurs plus ou moins semblables allant de 4,8 pour le MICD monodirectionnel et le MIDCA, à 4,7 pour le MICD bidirectionnel qui semble un peu plus performant. Ce que l'on peut observer c'est que pour chacune de ces images d'erreur, l'entropie est largement plus faible que l'entropie de l'image originale. Ainsi, le codage prédictif et le schéma en boucle fermée montre bien son utilité sur une simple transmission de l'image.
 
 \begin{figure}[H]
 \begin{center}
@@ -149,9 +149,9 @@ Nous pouvons aussi constater sur les histogrammes que les différentes erreurs o
 
 \subsubsection{Codage compétitif}
 
-Ce que l'on peut observer sur les images d'erreur c'est que les prédicteurs ne réagissent pas de la même manière selon les endroits de l'image. Ainsi, il est intéressant d'utiliser le meilleurs prédicteurs pour un pixel donné dans le but de réduire l'entropie et c'est à ça que consiste le codage prédictif. Pour chaque pixel on teste le prédicteur qui minimisera l'erreur et ainsi l'information à transmettre.
+Ce que l'on peut observer sur les images d'erreur c'est que les prédicteurs ne réagissent pas de la même manière selon les endroits de l'image. Ainsi, il est intéressant d'utiliser le meilleur prédicteur pour un pixel donné dans le but de réduire l'entropie et c'est ce en quoi consiste le codage prédictif. Pour chaque pixel on teste le prédicteur qui minimisera l'erreur et ainsi l'information à transmettre.
 
-Or, il est aussi nécessaire avec cette façon de faire de transmettre une seconde image qui informe le décodeur sur le prédicteur qui a été choisi. Cette carte des choix ( présente ci-dessous ) a une entropie proche de 1,3.
+Or, il est aussi nécessaire, avec cette façon de faire, de transmettre une seconde image qui informe le décodeur sur le prédicteur qui a été choisi. Cette carte des choix (présente ci-dessous) a une entropie proche de 1,3.
 
 \begin{figure}[H]
 \begin{center}
@@ -167,7 +167,7 @@ Or, il est aussi nécessaire avec cette façon de faire de transmettre une secon
 \end{center}
 \end{figure}
 
-Concernant la carte d'erreur, on peut observer que l'entropie  en compétitif est largement inférieur aux autres prédicteurs. Mais cela est à relativiser car il y a la transmission du choix.
+Concernant la carte d'erreur, on peut observer que l'entropie en compétitif est largement inférieure aux autres prédicteurs. Mais cela est à relativiser car il y à la transmission du choix.
 
 \begin{figure}[H]
 \begin{center}
@@ -187,7 +187,7 @@ Une autre méthode pour réduire l'entropie de l'information est de procéder à
 \end{center}
 \end{figure}
 
-Malgré tout, même si la baisse de l'entropie est une bonne chose. Cette dernière comme dis précédemment impact le résultat finale et une donne une image de moins bonne qualité. Si la différence ne se fait pas sentir lorsque le pas de quantification est faible, lorsque ce dernier augmente trop cela produit des effets sur l'image. Les effets produits sont différents selon le prédicteur choisi : le MICD monodirectionnel et MICDA font tout deux rapidement disparaître les nuages dans le ciel par exemple tandis que le MICD bidirectionnel laisse apparaître des traits diagonaux.
+Malgré tout, même si la baisse de l'entropie est une bonne chose, cette dernière, comme dit précédemment, impacte le résultat final et donne une image de moins bonne qualité. Si la différence ne se fait pas sentir lorsque le pas de quantification est faible, lorsque ce dernier augmente trop cela produit des effets sur l'image. Les effets produits sont différents selon le prédicteur choisi : par exemple le MICD monodirectionnel et MICDA font tout deux rapidement disparaître les nuages dans le ciel, tandis que le MICD bidirectionnel laisse apparaître des traits diagonaux.
 
 \begin{figure}[H]
 \begin{center}
@@ -225,7 +225,7 @@ Malgré tout, même si la baisse de l'entropie est une bonne chose. Cette derni�
 \end{center}
 \end{figure}
 
-Malgré tout, on peut observer que le compétitif résiste un peu mieux à la quantification et c'est notamment assez visible sur ce graphique ci-dessous représentant le PSNR en fonction du pas de quantification. On voit que le compétitif est clairement au dessus des autres prédicteurs.
+Malgré tout, on peut observer que le compétitif résiste un peu mieux à la quantification et c'est notamment assez visible sur le graphique ci-dessous représentant le PSNR en fonction du pas de quantification. On voit que le compétitif est clairement au dessus des autres prédicteurs.
 
 \begin{figure}[H]
 \begin{center}
@@ -236,7 +236,7 @@ Malgré tout, on peut observer que le compétitif résiste un peu mieux à la qu
 
 \section{Conclusion}
 
-Ce TP nous as permis de voir l’efficacité du schéma boucle en boucle fermée et l'influence de la quantification sur cette structure. Nous avons aussi pu voir l'influence des différents prédicteurs sur l'image.
+Ce TP nous a permis de voir l’efficacité du schéma en boucle fermée et l'influence de la quantification sur cette structure. Nous avons aussi pu voir l'influence des différents prédicteurs sur l'image.
 
 
 \begin{comment}
